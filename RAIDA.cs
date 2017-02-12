@@ -5,11 +5,10 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-
-namespace CloudCoinCore
+namespace Foundation
 {
-    public class RAIDA
-    {//  instance variables
+    class RAIDA
+    {
         public DetectionAgent[] agent;
         public int milliSecondsToTimeOut;
         public CloudCoin returnCoin;
@@ -18,12 +17,11 @@ namespace CloudCoinCore
         private String ticketStatus2 = "empty";
 
         private int working_nn;
-        private int working_sn; 
+        private int working_sn;
         private String[] working_ans;
         private int working_getDenomination;
-        private int[] working_triad = {0,1,2};//place holder
-
-
+        private int[] working_triad = { 0, 1, 2 };//place holder
+        public bool[] raidaIsDetecting = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
 
         public RAIDA(int milliSecondsToTimeOut)
         { //  initialise instance variables
@@ -35,72 +33,132 @@ namespace CloudCoinCore
             } // end for each Raida
         }//End Constructor
 
-    
+
         public CloudCoin detectCoin(CloudCoin cc)
         {
             returnCoin = cc;
-            ThreadStart detectThread0Start = new ThreadStart(detectThread0);
-            ThreadStart detectThread1Start = new ThreadStart(detectThread1);
-            ThreadStart detectThread2Start = new ThreadStart(detectThread2);
-            ThreadStart detectThread3Start = new ThreadStart(detectThread3);
-            ThreadStart detectThread4Start = new ThreadStart(detectThread4);
-            ThreadStart detectThread5Start = new ThreadStart(detectThread5);
-            ThreadStart detectThread6Start = new ThreadStart(detectThread6);
-            ThreadStart detectThread7Start = new ThreadStart(detectThread7);
-            ThreadStart detectThread8Start = new ThreadStart(detectThread8);
-            ThreadStart detectThread9Start = new ThreadStart(detectThread9);
-            ThreadStart detectThread10Start = new ThreadStart(detectThread10);
-            ThreadStart detectThread11Start = new ThreadStart(detectThread1);
-            ThreadStart detectThread12Start = new ThreadStart(detectThread12);
-            ThreadStart detectThread13Start = new ThreadStart(detectThread13);
-            ThreadStart detectThread14Start = new ThreadStart(detectThread14);
-            ThreadStart detectThread15Start = new ThreadStart(detectThread15);
-            ThreadStart detectThread16Start = new ThreadStart(detectThread16);
-            ThreadStart detectThread17Start = new ThreadStart(detectThread17);
-            ThreadStart detectThread18Start = new ThreadStart(detectThread18);
-            ThreadStart detectThread19Start = new ThreadStart(detectThread19);
-            ThreadStart detectThread20Start = new ThreadStart(detectThread20);
-            ThreadStart detectThread21Start = new ThreadStart(detectThread21);
-            ThreadStart detectThread22Start = new ThreadStart(detectThread22);
-            ThreadStart detectThread23Start = new ThreadStart(detectThread23);
-            ThreadStart detectThread24Start = new ThreadStart(detectThread24);
-
             Thread[] detectThread = new Thread[25];
-            detectThread[0] = new Thread(detectThread0Start);
-            detectThread[1] = new Thread(detectThread1Start);
-            detectThread[2] = new Thread(detectThread2Start);
-            detectThread[3] = new Thread(detectThread3Start);
-            detectThread[4] = new Thread(detectThread4Start);
-            detectThread[5] = new Thread(detectThread5Start);
-            detectThread[6] = new Thread(detectThread6Start);
-            detectThread[7] = new Thread(detectThread7Start);
-            detectThread[8] = new Thread(detectThread8Start);
-            detectThread[9] = new Thread(detectThread9Start);
-            detectThread[10] = new Thread(detectThread10Start);
-            detectThread[11] = new Thread(detectThread11Start);
-            detectThread[12] = new Thread(detectThread12Start);
-            detectThread[13] = new Thread(detectThread13Start);
-            detectThread[14] = new Thread(detectThread14Start);
-            detectThread[15] = new Thread(detectThread15Start);
-            detectThread[16] = new Thread(detectThread16Start);
-            detectThread[17] = new Thread(detectThread17Start);
-            detectThread[18] = new Thread(detectThread18Start);
-            detectThread[19] = new Thread(detectThread19Start);
-            detectThread[20] = new Thread(detectThread20Start);
-            detectThread[21] = new Thread(detectThread21Start);
-            detectThread[22] = new Thread(detectThread22Start);
-            detectThread[23] = new Thread(detectThread23Start);
-            detectThread[24] = new Thread(detectThread24Start);
+
+
+            if (raidaIsDetecting[0])
+            {
+                ThreadStart detectThread0Start = new ThreadStart(detectThread0);
+                detectThread[0] = new Thread(detectThread0Start);
+            }
+            if (raidaIsDetecting[1])
+            {
+                ThreadStart detectThread1Start = new ThreadStart(detectThread1);
+                detectThread[1] = new Thread(detectThread1Start);
+            }
+            if (raidaIsDetecting[2])
+            {
+                ThreadStart detectThread2Start = new ThreadStart(detectThread2);
+                detectThread[2] = new Thread(detectThread2Start);
+            }
+            if (raidaIsDetecting[3])
+            {
+                ThreadStart detectThread3Start = new ThreadStart(detectThread3);
+                detectThread[3] = new Thread(detectThread3Start);
+            }
+
+            if (raidaIsDetecting[4])
+            {
+                ThreadStart detectThread4Start = new ThreadStart(detectThread4);
+                detectThread[4] = new Thread(detectThread4Start);
+            }
+
+            if (raidaIsDetecting[5])
+            {
+                ThreadStart detectThread5Start = new ThreadStart(detectThread5);
+                detectThread[5] = new Thread(detectThread5Start);
+            }
+
+            if (raidaIsDetecting[6])
+            {
+                ThreadStart detectThread6Start = new ThreadStart(detectThread6);
+                detectThread[6] = new Thread(detectThread6Start);
+            }
+            if (raidaIsDetecting[7])
+            {
+                ThreadStart detectThread7Start = new ThreadStart(detectThread7);
+                detectThread[7] = new Thread(detectThread7Start);
+            }
+            if (raidaIsDetecting[8])
+            {
+                ThreadStart detectThread8Start = new ThreadStart(detectThread8);
+                detectThread[8] = new Thread(detectThread8Start);
+            }
+            if (raidaIsDetecting[9])
+            {
+                ThreadStart detectThread9Start = new ThreadStart(detectThread9);
+                detectThread[9] = new Thread(detectThread9Start);
+            }
+            if (raidaIsDetecting[10])
+            {
+                ThreadStart detectThread10Start = new ThreadStart(detectThread10);
+                detectThread[10] = new Thread(detectThread10Start);
+            }
+            if (raidaIsDetecting[11])
+            {
+                ThreadStart detectThread11Start = new ThreadStart(detectThread1);
+                detectThread[11] = new Thread(detectThread11Start);
+            }
+            if (raidaIsDetecting[12])
+            {
+                ThreadStart detectThread12Start = new ThreadStart(detectThread12);
+                detectThread[12] = new Thread(detectThread12Start);
+            }
+            if (raidaIsDetecting[13])
+            {
+                ThreadStart detectThread13Start = new ThreadStart(detectThread13);
+                detectThread[13] = new Thread(detectThread13Start);
+            }
+            if (raidaIsDetecting[14])
+            {
+                ThreadStart detectThread14Start = new ThreadStart(detectThread14);
+                detectThread[14] = new Thread(detectThread14Start);
+            }
+            if (raidaIsDetecting[15])
+            {
+                ThreadStart detectThread15Start = new ThreadStart(detectThread15);
+                detectThread[15] = new Thread(detectThread15Start);
+            }
+            if (raidaIsDetecting[16])
+            {
+                ThreadStart detectThread16Start = new ThreadStart(detectThread16);
+                detectThread[16] = new Thread(detectThread16Start);
+            }
+            if (raidaIsDetecting[17])
+            {
+                ThreadStart detectThread17Start = new ThreadStart(detectThread17);
+                detectThread[17] = new Thread(detectThread17Start);
+            }
+            if (raidaIsDetecting[18])
+            {
+                ThreadStart detectThread18Start = new ThreadStart(detectThread18);
+                detectThread[18] = new Thread(detectThread18Start);
+            }
+            if (raidaIsDetecting[19]) { ThreadStart detectThread19Start = new ThreadStart(detectThread19); detectThread[19] = new Thread(detectThread19Start); }
+            if (raidaIsDetecting[20]) { ThreadStart detectThread20Start = new ThreadStart(detectThread20); detectThread[20] = new Thread(detectThread20Start); }
+            if (raidaIsDetecting[21]) { ThreadStart detectThread21Start = new ThreadStart(detectThread21); detectThread[21] = new Thread(detectThread21Start); }
+            if (raidaIsDetecting[22]) { ThreadStart detectThread22Start = new ThreadStart(detectThread22); detectThread[22] = new Thread(detectThread22Start); }
+            if (raidaIsDetecting[23]) { ThreadStart detectThread23Start = new ThreadStart(detectThread23); detectThread[23] = new Thread(detectThread23Start); }
+            if (raidaIsDetecting[24]) { ThreadStart detectThread24Start = new ThreadStart(detectThread24); detectThread[24] = new Thread(detectThread24Start); }
+
+
+
 
             foreach (Thread myThread in detectThread)
             {
-                myThread.Start();
-                if (!myThread.Join(TimeSpan.FromSeconds(milliSecondsToTimeOut)))
+                if (myThread != null)
                 {
-                    myThread.Abort();
-                }//End if timeout. 
-            }//End start each thread for each
-
+                    myThread.Start();
+                    if (!myThread.Join(TimeSpan.FromSeconds(milliSecondsToTimeOut)))
+                    {
+                        myThread.Abort();
+                    }//End if timeout. 
+                }//End start each thread for each
+            }
             returnCoin.setAnsToPansIfPassed();
             returnCoin.calculateHP();
             returnCoin.gradeCoin();
@@ -273,7 +331,7 @@ namespace CloudCoinCore
             TimeSpan ts = after.Subtract(before);
             Console.WriteLine("It took this many ms to fix the guid: " + ts.Milliseconds);
 
-            returnCoin.calculateHP();
+            returnCoin.calculateHP();//how many fails did it get
             returnCoin.gradeCoin();
             // sets the grade and figures out what the file extension should be (bank, fracked, counterfeit, lost
             returnCoin.calcExpirationDate();
@@ -322,7 +380,7 @@ namespace CloudCoinCore
 
         public void fixThread0()
         {
-            agent[working_triad[0]].get_ticket(working_nn, working_sn, working_ans[0], working_getDenomination );
+            agent[working_triad[0]].get_ticket(working_nn, working_sn, working_ans[0], working_getDenomination);
             Console.Out.WriteLine(agent[working_triad[0]].lastRequest);
             Console.Out.WriteLine();
             if (agent[working_triad[0]].lastResponse.Contains("fail")) { Console.ForegroundColor = ConsoleColor.Red; } else { Console.ForegroundColor = ConsoleColor.Green; }
@@ -352,5 +410,5 @@ namespace CloudCoinCore
         }
 
 
-    }//end class
-}//end namespace
+    }
+}

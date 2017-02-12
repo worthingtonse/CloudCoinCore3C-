@@ -4,9 +4,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CloudCoinCore
+
+namespace Foundation
 {
-    public class CloudCoin
+    class CloudCoin
     {
         //  instance variables
         public int nn;// Network Numbers
@@ -89,7 +90,7 @@ namespace CloudCoinCore
             this.hp = 25;
             for (int i = 0; (i < 25); i++)
             {
-                if (this.pastStatus[i] == "fail" )
+                if (this.pastStatus[i] == "fail")
                 {
                     this.hp--;
                 }
@@ -110,7 +111,7 @@ namespace CloudCoinCore
             String internalAoid = "";
             for (int i = 0; (i < 25); i++)
             {
-                if (this.pastStatus[i] == "pass" )
+                if (this.pastStatus[i] == "pass")
                 {
                     passed++;
                     internalAoid += "p";
@@ -232,7 +233,7 @@ namespace CloudCoinCore
                     break;
             }
             // end RAIDA other errors and unknowns
-            return "\n " + passedDesc + " said Passed. " + "\n "   + failedDesc +" said Failed. \n RAIDA Status: " + otherDesc ;
+            return "\n " + passedDesc + " said Passed. " + "\n " + failedDesc + " said Failed. \n RAIDA Status: " + otherDesc;
         }
 
         // end grade coin
@@ -240,7 +241,7 @@ namespace CloudCoinCore
         {
             DateTime date = new DateTime();
             date.AddYears(YEARSTILEXPIRE);
-            this.ed = (date.Month + "-" + date.Year );
+            this.ed = (date.Month + "-" + date.Year);
             this.edHex = date.Month.ToString("X1");
             this.edHex += (this.edHex + date.Year.ToString("X4"));
         }
@@ -253,8 +254,8 @@ namespace CloudCoinCore
                 var bytes = new byte[16];
                 provider.GetBytes(bytes);
 
-              Guid pan =  new Guid(bytes);
-               return pan.ToString("N");
+                Guid pan = new Guid(bytes);
+                return pan.ToString("N");
             }
         }
 
@@ -268,16 +269,18 @@ namespace CloudCoinCore
             String otherDesc = "";
             for (int i = 0; (i < 25); i++)
             {
-                if (this.pastStatus[i] == "pass"){
+                if (this.pastStatus[i] == "pass")
+                {
                     passed++;
                 }
-                else if (this.pastStatus[i] == "fail"){
+                else if (this.pastStatus[i] == "fail")
+                {
                     failed++;
-                }else{
-                    other++;
                 }
-
-                // end if pass, fail or unknown
+                else
+                {
+                    other++;
+                }// end if pass, fail or unknown
             }
 
             // for each status
@@ -380,17 +383,17 @@ namespace CloudCoinCore
             }
             // end RAIDA other errors and unknowns
             // Coin will go to bank, counterfeit or fracked
-            if ((other > 12))
+            if ( other > 12 )
             {
                 // not enough RAIDA to have a quorum
                 this.extension = "suspect";
             }
-            else if ((failed > passed))
+            else if ( failed > passed )
             {
                 // failed out numbers passed with a quorum: Counterfeit
                 this.extension = "counterfeit";
             }
-            else if ((failed > 0))
+            else if ( failed > 0 )
             {
                 // The quorum majority said the coin passed but some disagreed: fracked. 
                 this.extension = "fracked";
@@ -443,42 +446,32 @@ namespace CloudCoinCore
             //  System.out.println("Finished detecting coin index " + j);
             // PRINT OUT ALL COIN'S RAIDA STATUS AND SET AN TO NEW PAN
             Console.Out.WriteLine("");
-            Console.Out.WriteLine("Authenticity Detection Report for: ");
-            Console.Out.WriteLine(("CloudCoin SN #"
-                            + (this.sn + (", Denomination: " + this.getDenomination()))));
-            int RAIDAHealth = 25;
-            this.hp = 25;
+            Console.Out.Write("Authenticity Detection Report for: SN #" + this.sn + ", Denomination: " + this.getDenomination());
+
             for (int i = 0; (i < 25); i++)
             {
-                if ((((i % 5) == 0) && (i != 0))) // Give every five statuses a line break
+                if (i % 5 == 0 && i != 0) // Give every five statuses a line break
                 {
                     Console.Out.WriteLine("");
-                }
-
-                this.pastStatus[i] = this.pastStatus[i];
-                if ((this.pastStatus[i] == "pass"))
-                {
-                    this.ans[i] = this.pans[i];
-                    // RAIDA health says good
-                }
-                else if ((this.pastStatus[i] == "fail"))
-                {
-                    this.hp--;
-                }
-                else
-                {
-                    RAIDAHealth--;
                 }
 
                 // check if failed
                 string fmt = "00";
                 string fi = i.ToString(fmt); // Pad numbers with two digits
-                Console.Out.WriteLine(("RAIDA" + (fi + (": " + (this.pastStatus[i].Substring(0, 4) + " | ")))));
+                Console.Out.WriteLine("RAIDA" + i + " status: " + pastStatus[i] + " | ");
+               // Console.Out.WriteLine("AN " + i + ans[i]);
+               // Console.Out.WriteLine("PAN " + i + pans[i]);
             }
 
             // End for each cloud coin GUID statu
-            Console.Out.WriteLine("");
-        }
+          //  Console.Out.WriteLine("ed " + ed);
+          //  Console.Out.WriteLine("edHex " + edHex);
+          //  Console.Out.WriteLine("edhp " + hp);
+           // Console.Out.WriteLine("fileName " + fileName);
+           // Console.Out.WriteLine("YEARSTILEXPIRE " + YEARSTILEXPIRE);
+            Console.Out.WriteLine("extension " + extension);
+
+
+        }//Console Report
     }
-    // End of class CloudCoin
 }

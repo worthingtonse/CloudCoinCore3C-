@@ -1,66 +1,62 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CloudCoinCore
+namespace Foundation
 {
-    public class Frack_Fixer
+    class Frack_Fixer
     {
-
         //  instance variables - replace the example below with your own
-        FileUtils fileUtils;
-
-        int totalValueToBank;
-
-        int totalValueToFractured;
-
-        int totalValueToCounterfeit;
-
-        RAIDA raida;
+        private FileUtils fileUtils;
+        private int totalValueToBank;
+        private int totalValueToFractured;
+        private int totalValueToCounterfeit;
+        private RAIDA raida;
 
         public Frack_Fixer(FileUtils fileUtils, int timeout)
         {
             this.fileUtils = fileUtils;
-            this.raida = new RAIDA(timeout);
-        }
+            raida = new RAIDA(timeout);
+            totalValueToBank = 0;
+            totalValueToCounterfeit = 0;
+            totalValueToFractured = 0;
+        }//constructor
 
+
+        /* Loads all fracked coins and tries to fix them. */
         public int[] fixAll()
         {
             int[] results = new int[3];
-            String[] frackedFileNames = Directory.GetFiles(this.fileUtils.frackedFolder);
-            int totalValueToBank = 0;
-            int totalValueToCounterfeit = 0;
-            int totalValueToFractured = 0;
-            CloudCoin newCC;
-            for (int j = 0; (j < frackedFileNames.Length); j++)
+            String[] frackedFileNames = new DirectoryInfo(this.fileUtils.frackedFolder ).GetFiles().Select(o => o.Name).ToArray();
+            CloudCoin frackedCC;
+            Console.WriteLine("UnFracking coin 1 of " + frackedFileNames.Length);
+            for ( int j = 0; j < frackedFileNames.Length; j++ )
             {
                 try
                 {
-                    // System.out.println("Construct Coin: "+rootFolder + suspectFileNames[j]);
-                    newCC = fileUtils.loadOneCloudCoinFromJsonFile(this.fileUtils.frackedFolder + frackedFileNames[j]);
-                    Console.WriteLine("UnFracking SN #" + newCC.sn + ", Denomination: " + newCC.getDenomination());
-                    CloudCoin fixedCC = this.raida.fixCoin(newCC);
-                    // Will attempt to unfrack the coin. 
+                    frackedCC = fileUtils.loadOneCloudCoinFromJsonFile( this.fileUtils.frackedFolder + frackedFileNames[j] );
+                    Console.WriteLine( "UnFracking SN #" + frackedCC.sn + ", Denomination: " + frackedCC.getDenomination() );
+
+                    CloudCoin fixedCC = this.raida.fixCoin( frackedCC ); // Will attempt to unfrack the coin. 
+
                     fixedCC.consoleReport();
                     switch (fixedCC.extension)
                     {
                         case "bank":
                             this.totalValueToBank++;
-                            this.fileUtils.writeTo( this.fileUtils.bankFolder, fixedCC );
+                            this.fileUtils.writeTo(this.fileUtils.bankFolder, fixedCC);
                             break;
                         case "fractured":
                             this.totalValueToFractured++;
-                            this.fileUtils.writeTo( this.fileUtils.frackedFolder, fixedCC );
+                            this.fileUtils.writeTo(this.fileUtils.frackedFolder, fixedCC);
                             break;
                         case "counterfeit":
                             this.totalValueToCounterfeit++;
-                            this.fileUtils.writeTo( this.fileUtils.counterfeitFolder, fixedCC );
+                            this.fileUtils.writeTo(this.fileUtils.counterfeitFolder, fixedCC);
                             break;
                     }
                     // end switch on the place the coin will go 
-                    this.deleteCoin( this.fileUtils.frackedFolder + frackedFileNames[j] );
+                    this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[j]);
                 }
                 catch (FileNotFoundException ex)
                 {
@@ -69,37 +65,30 @@ namespace CloudCoinCore
                 catch (IOException ioex)
                 {
                     Console.WriteLine(ioex);
-                }
+                } // end try catch
+            }// end for each file name that is fracked
 
-                // end try catch
-            }
-
-            // end for each coin to import
-            // System.out.println("Results of Import:");
             results[0] = this.totalValueToBank;
-            results[1] = this.totalValueToCounterfeit;
-            // System.out.println("Counterfeit and Moved to trash: "+totalValueToCounterfeit);
-            results[2] = this.totalValueToFractured;
-            // System.out.println("Fracked and Moved to Fracked: "+ totalValueToFractured);
+            results[1] = this.totalValueToCounterfeit; // System.out.println("Counterfeit and Moved to trash: "+totalValueToCounterfeit);
+            results[2] = this.totalValueToFractured; // System.out.println("Fracked and Moved to Fracked: "+ totalValueToFractured);
             return results;
         }// end fix all
- 
 
         // End select all file names in a folder
         public bool deleteCoin(String path)
         {
             bool deleted = false;
-         
+
             // System.out.println("Deleteing Coin: "+path + this.fileName + extension);
             try
             {
-               File.Delete(path);
-            }catch (Exception e) {
-                Console.WriteLine( e );
+                File.Delete(path);
             }
-
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
             return deleted;
-        }
-    }
-    // End Frack Fixer  
-}
+        }//end delete coin
+    }//end class
+}//end namespace

@@ -3,11 +3,10 @@ using System.Net;
 using System.Text;
 using System.IO;
 
-namespace CloudCoinCore
+namespace Foundation
 {
-    public class DetectionAgent
+    class DetectionAgent
     {
-
         // instance variables
         /**
          * Time to allow the Detection Agent to respond before marking them as "error"
@@ -57,6 +56,8 @@ namespace CloudCoinCore
                                              */
         public String lastResponse = "empty";//LAST JSON recieved from the RAIDA
 
+        public bool fixable = true; //Specifies if the agent is able to fix fracked coins (false if fix throws errors)
+        public bool detectable = true; //Specifies if the agent is able to detect authenticty coins (false if detect throws errors)
         /**
          * DetectionAgent Constructor
          *
@@ -106,7 +107,7 @@ namespace CloudCoinCore
          */
         public String detect(int nn, int sn, String an, String pan, int d)
         {
-            this.lastRequest = this.fullUrl + "detect?nn=" + nn + "&sn=" + sn + "&an=" + an + "&pan=" + pan + "&denomination=" + d +"&b=t";
+            this.lastRequest = this.fullUrl + "detect?nn=" + nn + "&sn=" + sn + "&an=" + an + "&pan=" + pan + "&denomination=" + d + "&b=t";
             // System.out.println(this.lastRequest);
             DateTime before = DateTime.Now;
             try
@@ -137,7 +138,7 @@ namespace CloudCoinCore
             }
         }//end detect
 
- 
+
         public String get_ticket(int nn, int sn, String an, int d)
         { //Will only use ans to fix
             this.lastRequest = fullUrl + "get_ticket?nn=" + nn + "&sn=" + sn + "&an=" + an + "&pan=" + an + "&denomination=" + d;
@@ -150,7 +151,7 @@ namespace CloudCoinCore
                 String message = KeyPairs[3];
                 int startTicket = ordinalIndexOf(message, "\"", 3) + 2;
                 int endTicket = ordinalIndexOf(message, "\"", 4) - startTicket;
-                this.lastTicket = message.Substring(startTicket -1, endTicket + 1);
+                this.lastTicket = message.Substring(startTicket - 1, endTicket + 1);
                 this.lastTicketStatus = "ticket";
                 DateTime after = DateTime.Now; TimeSpan ts = after.Subtract(before);
                 this.dms = ts.Milliseconds;
@@ -159,14 +160,14 @@ namespace CloudCoinCore
             return "error";
         }//end get ticket
 
-        public String testHint( int nn, int sn, String an, int d)
+        public String testHint(int nn, int sn, String an, int d)
         {
             Console.Out.WriteLine("Checking ticket...");
-            get_ticket( nn, sn, an, d);
+            get_ticket(nn, sn, an, d);
             Console.Out.WriteLine("Last ticket is: " + lastTicket);
-            if ( lastTicketStatus == "ticket")
+            if (lastTicketStatus == "ticket")
             {
-                this.lastRequest = fullUrl + "hints?rn=" + this.lastTicket;         
+                this.lastRequest = fullUrl + "hints?rn=" + this.lastTicket;
                 DateTime before = DateTime.Now;
                 this.lastResponse = getHtml(this.lastRequest);
                 DateTime after = DateTime.Now;
@@ -217,7 +218,7 @@ namespace CloudCoinCore
              //  System.out.println(ex + " " +this.lastResponse);
                 return "error";
             }
-           
+
 
             if (this.lastResponse.Contains("success"))
             {
@@ -273,7 +274,7 @@ namespace CloudCoinCore
             return data;
         }//end get HTML
 
-   
+
 
         /**
          * Method ordinalIndexOf used to parse cloudcoins. Finds the nth number of a character within a string
@@ -292,6 +293,5 @@ namespace CloudCoinCore
             }
             return pos;
         }//end ordinal Index of
-
-    }//End class Detection Agent
-}//end namespace
+    }
+}

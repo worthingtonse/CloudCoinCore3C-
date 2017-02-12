@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
-using System.Runtime.Serialization.Json;
 
-namespace CloudCoinCore
+
+namespace Foundation
 {
-    public class KeyboardReader
+    class KeyboardReader
     {
 
         public static int INT_MESSAGE = 0;
@@ -33,7 +33,7 @@ namespace CloudCoinCore
             this.prompt = "> ";
 
         }
- 
+
 
         public void setPrompt(string newPrompt)
         {
@@ -52,32 +52,32 @@ namespace CloudCoinCore
 
         }
 
-        public void setErrorMessageString( string msg)
+        public void setErrorMessageString(string msg)
         {
             this.errorMessages[STRING_MESSAGE] = msg;
         }
 
-        public void setErrorMessageInt( string msg)
+        public void setErrorMessageInt(string msg)
         {
             this.errorMessages[INT_MESSAGE] = msg;
         }
 
-        public void setErrorMessageDouble( string msg)
+        public void setErrorMessageDouble(string msg)
         {
             this.errorMessages[DOUBLE_MESSAGE] = msg;
         }
 
-        public void setErrorMessageChar( string msg)
+        public void setErrorMessageChar(string msg)
         {
             this.errorMessages[CHAR_MESSAGE] = msg;
         }
 
-        public void setErrorMessageBoolean( string msg)
+        public void setErrorMessageBoolean(string msg)
         {
             this.errorMessages[BOOLEAN_MESSAGE] = msg;
         }
 
-        public void setErrorMessageLong( string msg)
+        public void setErrorMessageLong(string msg)
         {
             this.errorMessages[LONG_MESSAGE] = msg;
         }
@@ -198,7 +198,7 @@ namespace CloudCoinCore
                     number = Convert.ToInt32(inputString);
                     if (((number < min) || (number > max)))
                     {
-                        Console.Out.WriteLine(("Please enter an integer between "+ (min + (" and " + max))));
+                        Console.Out.WriteLine(("Please enter an integer between " + (min + (" and " + max))));
                     }
                     else
                     {
@@ -208,7 +208,7 @@ namespace CloudCoinCore
                 }
                 catch (FormatException e)
                 {
-                    Console.Out.WriteLine("Input is not an integer. " + " Please enter an integer between " + min + " and " + max );
+                    Console.Out.WriteLine("Input is not an integer. " + " Please enter an integer between " + min + " and " + max);
                     Console.Out.Write(this.prompt);
                 }
 
@@ -279,7 +279,5 @@ namespace CloudCoinCore
 
             return (char)charAsInt;
         }//end nextChar
-
-
     }
 }

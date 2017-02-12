@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CloudCoinCore
+namespace Foundation
 {
-    public class Banker
+    class Banker
     {
-
         public FileUtils fileUtils;
         public Banker(FileUtils fileUtils)
         {
@@ -19,7 +18,7 @@ namespace CloudCoinCore
         {
             int[] returnCounts = new int[6];
             // 0. Total, 1.1s, 2,5s, 3.25s 4.100s, 5.250s
-            String[] fileNames = Directory.GetFiles(directoryPath);
+            String[] fileNames = new DirectoryInfo(directoryPath).GetFiles().Select(o => o.Name).ToArray();
             for (int i = 0; (i < fileNames.Length); i++)
             {
                 String[] nameParts = fileNames[i].Split('.');
