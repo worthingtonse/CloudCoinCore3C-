@@ -8,23 +8,25 @@ namespace Foundation
 {
     class Detector
     {
-        //  instance variables - replace the example below with your own
+        /*  INSTANCE VARIABLES */
         RAIDA raida;
         FileUtils fileUtils;
 
+
+        /*  CONSTRUCTOR */
         public Detector(FileUtils fileUtils, int timeout)
         {
             this.raida = new RAIDA(timeout);
             this.fileUtils = fileUtils;
-        }
+        }// end Detect constructor
 
-        // end Detect constructor
+
+        /*  PUBLIC METHODS */
         public int[] detectAll()
         {
             // LOAD THE .suspect COINS ONE AT A TIME AND TEST THEM
-            int[] results = new int[3];
-            // [0] Coins to bank, [1] Coins to fracked [1] Coins to Counterfeit
-            String[] suspectFileNames = new DirectoryInfo(this.fileUtils.suspectFolder).GetFiles().Select(o => o.Name).ToArray();
+            int[] results = new int[3]; // [0] Coins to bank, [1] Coins to fracked [1] Coins to Counterfeit
+            String[] suspectFileNames = new DirectoryInfo(this.fileUtils.suspectFolder).GetFiles().Select(o => o.Name).ToArray();//Get all files in suspect folder
             int totalValueToBank = 0;
             int totalValueToCounterfeit = 0;
             int totalValueToFractured = 0;
@@ -34,13 +36,14 @@ namespace Foundation
             {
                 try
                 {
-                    // System.out.println("Construct Coin: "+rootFolder + suspectFileNames[j]);
+                    Console.Out.WriteLine("Detecting " + j + " of " + suspectFileNames.Length + " coins to detect");
                     newCC = this.fileUtils.loadOneCloudCoinFromJsonFile(this.fileUtils.suspectFolder + suspectFileNames[j]);
-                    Console.Out.WriteLine("");
+                    
                     Console.Out.WriteLine("");
                     Console.Out.WriteLine("Detecting SN #" + newCC.sn + ", Denomination: " + newCC.getDenomination());
 
                     CloudCoin detectedCC = this.raida.detectCoin(newCC);
+                    detectedCC.calcExpirationDate();
               
                     if(j==0)//If we are detecting the first coin, note if the RAIDA are working
                     { 
@@ -53,9 +56,7 @@ namespace Foundation
                     }//end if it is the first coin we are detecting
 
                     detectedCC.consoleReport();
-                   
-                    // Console.Out.WriteLine("The ex");
-                  
+
                     bool alreadyExists = false;//Does the file already been imported?
                     switch (detectedCC.extension)
                     {
@@ -100,12 +101,9 @@ namespace Foundation
                     Console.Out.WriteLine(ioex);
                 }// end try catch
             }// end for each coin to import
-            // System.out.println("Results of Import:");
             results[0] = totalValueToBank;
             results[1] = totalValueToCounterfeit;
-            // System.out.println("Counterfeit and Moved to trash: "+totalValueToCounterfeit);
             results[2] = totalValueToFractured;
-            // System.out.println("Fracked and Moved to Fracked: "+ totalValueToFractured);
             return results;
         }//Detect All
     }

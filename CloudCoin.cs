@@ -475,7 +475,7 @@ namespace Foundation
             //  System.out.println("Finished detecting coin index " + j);
             // PRINT OUT ALL COIN'S RAIDA STATUS AND SET AN TO NEW PAN
             Console.Out.WriteLine("");
-            Console.Out.Write("Authenticity Detection Report for: SN #" + this.sn + ", Denomination: " + this.getDenomination());
+            Console.Out.WriteLine("Authenticity Detection Report for: SN #" + this.sn + ", Denomination: " + this.getDenomination());
 
             for (int i = 0; (i < 25); i++)
             {
@@ -487,7 +487,7 @@ namespace Foundation
                 // check if failed
                 string fmt = "00";
                 string fi = i.ToString(fmt); // Pad numbers with two digits
-                Console.Out.WriteLine("RAIDA" + i + " status: " + pastStatus[i] + " | ");
+                Console.Out.WriteLine("RAIDA" + i + " " + pastStatus[i] + " | ");
                // Console.Out.WriteLine("AN " + i + ans[i]);
                // Console.Out.WriteLine("PAN " + i + pans[i]);
             }

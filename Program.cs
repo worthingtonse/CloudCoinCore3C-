@@ -20,7 +20,7 @@ namespace Foundation
         public static String directoryFolder = (rootFolder + "Directory" + Path.DirectorySeparatorChar);
         public static String exportFolder = (rootFolder + "Export" + Path.DirectorySeparatorChar);
         public static String prompt = "Start Mode> ";
-        public static String[] commandsAvailable = new String[] { "show coins", "import", "export", "show folders", "fix fracked", "quit" };
+        public static String[] commandsAvailable = new String[] { "show coins", "import", "detect", "export", "show folders", "fix fracked", "quit" };
         //public static String[] commandsAvailable = new String[] { "import", "show coins", "export", "fix fracked", "quit", "show folders", "test echo", "test detect", "test get_ticket", "test hints", "test fix", };
         public static int timeout = 2000; // Milliseconds to wait until the request is ended. 
         public static FileUtils fileUtils = new FileUtils(rootFolder, importFolder, importedFolder, trashFolder, suspectFolder, frackedFolder, bankFolder, templateFolder, counterfeitFolder, directoryFolder, exportFolder);
@@ -58,6 +58,9 @@ namespace Foundation
                         break;
                     case "import":
                         import();
+                        break;
+                    case "detect":
+                        detect();
                         break;
                     case "export":
                          export();
@@ -142,43 +145,27 @@ namespace Foundation
 
         public static void import()
         {
-            Console.Out.WriteLine("This software loads .chest, .stack and .jpg coins into your bank folder.");
-            Console.Out.WriteLine("The software will authenticate/take ownership your coins and fix any fracks before importing.");
-            Console.Out.WriteLine("Because chest files typically have 1000 coins in them, this process may take over 30 minutes per chest file");
-            Console.Out.WriteLine("Any RAIDA servers that are not working may cause (buy may not) cause coins to be fracked. ");
-            Console.Out.WriteLine("It is a good idea to make sure the RAIDA is working before importing. ");
-            Console.Out.WriteLine("Once your coins are imported into your bank folder, only you will be able to use these coins.");
-            Console.Out.WriteLine("If you lose them you may have to wait 2 years to recover them assuming you file a lost coin report.");
-
-            Console.Out.WriteLine("This program will now load all files that are located in your import folder");
-            Console.Out.WriteLine("Please put your CloudCoin files in this folder now:" + importFolder);
-            Console.Out.WriteLine("Press Enter when you are ready");
-            Console.In.Read();
             Console.Out.WriteLine("Loading all CloudCoins in your import folder:" + importFolder);
             Importer importer = new Importer(fileUtils);
             if (!importer.importAll())//Moves all CloudCoins from the Import folder into the Suspect folder. 
             {
                 Console.Out.WriteLine("No coins in import folder. Checking if some coins need to be authenticated.");
-                Console.Out.WriteLine("Detecting Authentication of Suspect Coins");
-                Detector detector = new Detector(fileUtils, 3000);
-                int[] detectionResults = detector.detectAll();
-                Console.Out.WriteLine(("Total Received in bank: " + (detectionResults[0] + detectionResults[2])));
-                // And the bank and the fractured for total
-                Console.Out.WriteLine(("Total Counterfeit: " + detectionResults[1]));
-                showCoins();
             }
-            else {
-                // Move all coins to seperate JSON files in the the suspect folder.
-                Console.Out.WriteLine("Detecting Authentication of Suspect Coins");
-                Detector detector = new Detector(fileUtils, 3000);
-                int[] detectionResults = detector.detectAll();
-                Console.Out.WriteLine(("Total Received in bank: " + (detectionResults[0] + detectionResults[2])));
-                // And the bank and the fractured for total
-                Console.Out.WriteLine(("Total Counterfeit: " + detectionResults[1]));
-                showCoins();
+            else
+            {
+                //detect();
             }//end if coins to import
         }   // end import
 
+        public static void detect() {
+            Console.Out.WriteLine("Detecting Authentication of Suspect Coins");
+            Detector detector = new Detector(fileUtils, timeout);
+            int[] detectionResults = detector.detectAll();
+            Console.Out.WriteLine(("Total Received in bank: " + (detectionResults[0] + detectionResults[2])));
+            // And the bank and the fractured for total
+            Console.Out.WriteLine(("Total Counterfeit: " + detectionResults[1]));
+            showCoins();
+        }//end detect
 
         public static void export()
         {

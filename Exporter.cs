@@ -20,22 +20,22 @@ namespace Foundation
         /* PUBLIC METHODS */
         public void writeJPEGFiles(int m1, int m5, int m25, int m100, int m250, String tag)
         {
-            int totalSaved = m1  + (m5 * 5) + (m25 * 25) + (m100 * 100) + (m250 * 250) ;// Total value of all coins
+            int totalSaved = m1 + (m5 * 5) + (m25 * 25) + (m100 * 100) + (m250 * 250);// Total value of all coins
             int coinCount = m1 + m5 + m25 + m100 + m250; // Total number of coins 
             String[] coinsToDelete = new String[coinCount];
             String[] bankedFileNames = new DirectoryInfo(this.fileUtils.bankFolder).GetFiles().Select(o => o.Name).ToArray(); // list all file names with bank extension
             String[] frackedFileNames = new DirectoryInfo(this.fileUtils.frackedFolder).GetFiles().Select(o => o.Name).ToArray(); // list all file names with bank extension
 
             var list = new List<string>();
-            list.AddRange( bankedFileNames );
-            list.AddRange( frackedFileNames );
+            list.AddRange(bankedFileNames);
+            list.AddRange(frackedFileNames);
 
             bankedFileNames = list.ToArray(); // Add the two arrays together
 
             String path = this.fileUtils.exportFolder;//the word path is shorter than other stuff
-  
+
             // Look at all the money files and choose the ones that are needed.
-            for (int i = 0; i < bankedFileNames.Length ; i++)
+            for (int i = 0; i < bankedFileNames.Length; i++)
             {
                 String bankFileName = (this.fileUtils.bankFolder + bankedFileNames[i]);
                 String frackedFileName = (this.fileUtils.frackedFolder + bankedFileNames[i]);
@@ -44,19 +44,46 @@ namespace Foundation
                 String denomination = bankedFileNames[i].Split('.')[0];
                 try
                 {
-                    switch (denomination )
+                    switch (denomination)
                     {
-                        case "1": this.jpegWriteOne(path, tag, bankFileName, frackedFileName); m1--; break;
-                        case "5": this.jpegWriteOne(path, tag, bankFileName, frackedFileName); m5--; break;
-                        case "25": this.jpegWriteOne(path, tag, bankFileName, frackedFileName); m25--; break;
-                        case "100": this.jpegWriteOne(path, tag, bankFileName, frackedFileName); m100--; break;
-                        case "250": this.jpegWriteOne(path, tag, bankFileName, frackedFileName); m250--; break;
+                        case "1":
+                            if (m1 > 0)
+                            {
+                                this.jpegWriteOne(path, tag, bankFileName, frackedFileName); m1--;
+                            }
+                            break;
+                        case "5":
+                            if (m5 > 0)
+                            {
+
+                                this.jpegWriteOne(path, tag, bankFileName, frackedFileName); m5--;
+                            }
+                            break;
+                        case "25":
+                            if (m25 > 0)
+                            {
+
+                                this.jpegWriteOne(path, tag, bankFileName, frackedFileName); m25--;
+                            }
+                            break;
+
+                        case "100":
+                            if (m100 > 0)
+                            {
+                                this.jpegWriteOne(path, tag, bankFileName, frackedFileName); m100--;
+                            }
+                            break;
+
+                        case "250":
+                            if (m250 > 0)
+                            { this.jpegWriteOne(path, tag, bankFileName, frackedFileName); m250--; }
+                            break;
                     }//end switch
 
-                    if ( m1 == 0 && m5 == 0 && m25 == 0 && m100 == 0  && m250 == 0)// end if file is needed to write jpeg
+                    if (m1 == 0 && m5 == 0 && m25 == 0 && m100 == 0 && m250 == 0)// end if file is needed to write jpeg
                     {
                         break;// Break if all the coins have been called for.
-                    }         
+                    }
                 }
                 catch (FileNotFoundException ex)
                 {
@@ -69,7 +96,7 @@ namespace Foundation
             }// for each 1 note  
         }//end write all jpegs
 
-        // end jpeg prep
+        /* Write JSON to .stack File  */
         public bool writeJSONFile(int m1, int m5, int m25, int m100, int m250, String tag)
         {
             bool jsonExported = true;
@@ -285,23 +312,23 @@ namespace Foundation
                 CloudCoin jpgCoin = this.fileUtils.loadOneCloudCoinFromJsonFile(bankFileName);
                 if (this.fileUtils.writeJpeg(jpgCoin, tag))//If the jpeg writes successfully 
                 {
-                    File.Delete(bankFileName);//Delete the files if they have been written to
+                   // File.Delete(bankFileName);//Delete the files if they have been written to
                 }//end if write was good. 
             }
             else//Export a fracked coin. 
             {
                 CloudCoin jpgCoin = fileUtils.loadOneCloudCoinFromJsonFile(frackedFileName);
-                if( this.fileUtils.writeJpeg(jpgCoin, tag))
-                { 
-                    File.Delete(frackedFileName);//Delete the files if they have been written to
+                if (this.fileUtils.writeJpeg(jpgCoin, tag))
+                {
+                  //  File.Delete(frackedFileName);//Delete the files if they have been written to
                 }//end if
             }//end else
         }//End write one jpeg 
 
 
 
-      
-  
+
+
 
     }// end exporter class
 }//end namespace

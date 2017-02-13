@@ -164,6 +164,7 @@ namespace Foundation
             /* GET the first 455 bytes of he jpeg where the coin is located */
             String wholeString = "";
             byte[] jpegHeader = new byte[455];
+            Console.Out.WriteLine("Load file path " + loadFilePath);
             FileStream fileStream = new FileStream(loadFilePath, FileMode.Open, FileAccess.Read);
             try
             {
@@ -180,7 +181,7 @@ namespace Foundation
             }
             wholeString = bytesToHexString(jpegHeader);
             CloudCoin returnCC = this.parseJpeg(wholeString);
-
+            Console.Out.WriteLine("From FileUtils returnCC.fileName " + returnCC.fileName);
             return returnCC;
         }//end load one CloudCoin from JSON
 
@@ -277,7 +278,7 @@ namespace Foundation
         public bool writeJpeg(CloudCoin cc, string tag)
         {
             Console.Out.WriteLine("Writing jpeg " + cc.sn);
-            Console.In.ReadLine();
+  
             bool fileSavedSuccessfully = true;
 
             /* BUILD THE CLOUDCOIN STRING */
@@ -324,23 +325,25 @@ namespace Foundation
             }
 
             string fileName = exportFolder + cc.fileName + tag + ".jpg";
+            File.WriteAllBytes(fileName, jpegBytes);
 
             /* WRITE THE SERIAL NUMBER ON THE JPEG */
+            /*
+             * string fileName2 = exportFolder + cc.fileName + "savetest.jpg";
             Bitmap bitmapimage;
             using (var ms = new MemoryStream(jpegBytes))
             {
                 bitmapimage = new Bitmap(ms);
+                bitmapimage.Save(fileName2, ImageFormat.Jpeg);
             }
-
             Graphics graphics = Graphics.FromImage(bitmapimage);
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
             graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
             PointF drawPointAddress = new PointF(10.0F, 10.0F);
-
             graphics.DrawString(String.Format("{0:N0}", cc.sn) + " / 16,777,215 on Network: 1", new Font("Arial", 20), Brushes.White, drawPointAddress);
-            
             bitmapimage.Save(fileName, ImageFormat.Jpeg);
             bitmapimage.Dispose();
+            */
 
             return fileSavedSuccessfully;
         }//end write JPEG
@@ -375,7 +378,7 @@ namespace Foundation
             }
             else
             {
-                Console.WriteLine("A coin with that SN already exists in the folder.");
+                Console.WriteLine(folder + cc.fileName + ".stack" + " already exists in the folder.");
                 return alreadyExists;
             }//File Exists
             File.WriteAllText(folder + cc.fileName + ".stack", wholeJson);
@@ -411,6 +414,7 @@ namespace Foundation
                 cc.pastStatus[i] = "undetected";
             }
             cc.fileName = cc.getDenomination() + ".CloudCoin." + cc.nn + "." + cc.sn + ".";
+            Console.Out.WriteLine("parseJpeg cc.fileName " + cc.fileName);
             // end for each pan
             return cc;
         }// end parse Jpeg

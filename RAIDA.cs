@@ -20,6 +20,7 @@ namespace Foundation
         private String ticket2 = "";
         private String ticket3 = "";
 
+
         private int working_nn;
         private int working_sn;
         private String[] working_ans;
@@ -387,8 +388,8 @@ namespace Foundation
         public void fixThread0()
         {
             agent[working_triad[0]].get_ticket(working_nn, working_sn, working_ans[0], working_getDenomination);
-          //  Console.Out.WriteLine(agent[working_triad[0]].lastRequest);
-           // Console.Out.WriteLine();
+           Console.Out.WriteLine(agent[working_triad[0]].lastRequest);
+           Console.Out.WriteLine();
             if (agent[working_triad[0]].lastResponse.Contains("ticket"))
             {
                 ticketStatus0 = "ticket";
@@ -401,8 +402,8 @@ namespace Foundation
                 //Console.ForegroundColor = ConsoleColor.Red;
             }//end if ticket fail
           //  Console.Out.WriteLine("ticketStatus 0 " + ticketStatus0 + ", ticket 1 " + ticket1);
-          //  Console.Out.WriteLine(agent[working_triad[0]].lastResponse);
-           // Console.Out.WriteLine();
+            Console.Out.WriteLine(agent[working_triad[0]].lastResponse);
+            Console.Out.WriteLine();
            // Console.ForegroundColor = ConsoleColor.White;
         }
         public void fixThread1()
@@ -422,28 +423,28 @@ namespace Foundation
                // Console.ForegroundColor = ConsoleColor.Red;
             }
            // Console.Out.WriteLine("ticketStatus 1 " + ticketStatus1 + ", ticket 2 " + ticket2);
-          //  Console.Out.WriteLine(agent[working_triad[1]].lastResponse);
-           // Console.Out.WriteLine();
+            Console.Out.WriteLine(agent[working_triad[1]].lastResponse);
+            Console.Out.WriteLine();
            // Console.ForegroundColor = ConsoleColor.White;
         }
         public void fixThread2()
         {
             agent[working_triad[2]].get_ticket(working_nn, working_sn, working_ans[2], working_getDenomination);
-           // Console.Out.WriteLine(agent[working_triad[2]].lastRequest);
-          //  Console.Out.WriteLine();
+            Console.Out.WriteLine(agent[working_triad[2]].lastRequest);
+            Console.Out.WriteLine();
             if (agent[working_triad[2]].lastResponse.Contains("ticket"))
             {
                 ticketStatus2 = "ticket";
                 ticket3 = agent[working_triad[2]].lastTicket;
-                Console.ForegroundColor = ConsoleColor.Green;
+               // Console.ForegroundColor = ConsoleColor.Green;
             }
             else 
             {
                 ticketStatus2 = "fail";
-                Console.ForegroundColor = ConsoleColor.Red;
+              //  Console.ForegroundColor = ConsoleColor.Red;
             }
-           // Console.Out.WriteLine("ticketStatus 2 " + ticketStatus2 + ", ticket 3 " + ticket3);
-           // Console.Out.WriteLine(agent[working_triad[2]].lastResponse);
+           Console.Out.WriteLine("ticketStatus 2 " + ticketStatus2 + ", ticket 3 " + ticket3);
+            Console.Out.WriteLine(agent[working_triad[2]].lastResponse);
             //Console.Out.WriteLine();
            // Console.ForegroundColor = ConsoleColor.White;
         }

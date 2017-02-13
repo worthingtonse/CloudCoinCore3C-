@@ -85,7 +85,9 @@ namespace Foundation
             Console.Out.WriteLine("Trying to load: " + this.fileUtils.importFolder + fileName );
             try
             {
-                CloudCoin tempCoin = this.fileUtils.loadOneCloudCoinFromJPEGFile(this.fileUtils.importFolder + fileName );
+                Console.Out.WriteLine("Loading coin: " + fileUtils.importFolder + fileName);
+                CloudCoin tempCoin = this.fileUtils.loadOneCloudCoinFromJPEGFile( fileUtils.importFolder + fileName );
+                Console.Out.WriteLine("Loaded coin filename: " + tempCoin.fileName);
                 this.fileUtils.writeTo(this.fileUtils.suspectFolder, tempCoin);
                 return true;
             }
