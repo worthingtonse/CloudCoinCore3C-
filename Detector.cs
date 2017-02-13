@@ -39,10 +39,9 @@ namespace Foundation
                     Console.Out.WriteLine("");
                     Console.Out.WriteLine("");
                     Console.Out.WriteLine("Detecting SN #" + newCC.sn + ", Denomination: " + newCC.getDenomination());
+
                     CloudCoin detectedCC = this.raida.detectCoin(newCC);
               
-                   
-
                     if(j==0)//If we are detecting the first coin, note if the RAIDA are working
                     { 
                         for (int i=0;i<25;i++)// Checks any servers are down so we don't try to check them again. 

@@ -9,12 +9,16 @@ namespace Foundation
 {
     class RAIDA
     {
+        /* INSTANCE VARIABLE */
         public DetectionAgent[] agent;
         public int milliSecondsToTimeOut;
         public CloudCoin returnCoin;
         private String ticketStatus0 = "empty";
         private String ticketStatus1 = "empty";
         private String ticketStatus2 = "empty";
+        private String ticket1 = "";
+        private String ticket2 = "";
+        private String ticket3 = "";
 
         private int working_nn;
         private int working_sn;
@@ -23,6 +27,7 @@ namespace Foundation
         private int[] working_triad = { 0, 1, 2 };//place holder
         public bool[] raidaIsDetecting = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
 
+        /* CONSTRUCTOR */
         public RAIDA(int milliSecondsToTimeOut)
         { //  initialise instance variables
             this.milliSecondsToTimeOut = milliSecondsToTimeOut;
@@ -34,11 +39,11 @@ namespace Foundation
         }//End Constructor
 
 
+        /* PUBLIC METHODS */
         public CloudCoin detectCoin(CloudCoin cc)
         {
             returnCoin = cc;
             Thread[] detectThread = new Thread[25];
-
 
             if (raidaIsDetecting[0])
             {
@@ -270,39 +275,36 @@ namespace Foundation
         }
 
 
-
-
-
-
         public CloudCoin fixCoin(CloudCoin brokeCoin)
         {
             returnCoin = brokeCoin;
-            returnCoin.setAnsToPans();
+            returnCoin.setAnsToPans();// Make sure we set the RAIDA to the cc ans and not new pans. 
             DateTime before = DateTime.Now;
 
             String fix_result = "";
             FixitHelper fixer;
             String[] trustedServerAns;
-            String[] tickets = { "error", "error", "error" };
             int corner = 1;
 
-            // Make sure we set the RAIDA to the cc ans and not new pans. 
             // For every guid, check to see if it is fractured
-            for (int guid_id = 0; (guid_id < 25); guid_id++)
+            for (int guid_id = 0; guid_id < 25; guid_id++)
             {
-                Console.Out.WriteLine("Inspecting RAIDA guid " + guid_id);
+               // Console.Out.WriteLine("Inspecting RAIDA guid " + guid_id);
+               // Console.Out.WriteLine("RAIDA" + guid_id + " past status is " + returnCoin.pastStatus[guid_id]);
                 if (returnCoin.pastStatus[guid_id] == "fail")
                 { // This guid has failed, get tickets 
-                    Console.Out.WriteLine("RAIDA" + guid_id + " failed.");
+                  //  Console.Out.WriteLine("RAIDA" + guid_id + " failed authenticity and needs to be fixed.");
+
                     fixer = new FixitHelper(guid_id, returnCoin.ans);
 
                     trustedServerAns = new String[] { returnCoin.ans[fixer.currentTriad[0]], returnCoin.ans[fixer.currentTriad[1]], returnCoin.ans[fixer.currentTriad[2]] };
                     while (!fixer.finnished)
                     {
                         fix_result = "";
-                        tickets = this.get_tickets(fixer.currentTriad, trustedServerAns, returnCoin.nn, returnCoin.sn, returnCoin.getDenomination());
+                        get_tickets(fixer.currentTriad, trustedServerAns, returnCoin.nn, returnCoin.sn, returnCoin.getDenomination());
+                        //Console.Out.WriteLine("T1 " + ticketStatus0 + ", T2 " + ticketStatus1 + ", T3 " + ticketStatus2);
                         // See if there are errors in the tickets                  
-                        if (tickets[0] == "error" || tickets[2] == "error" || tickets[2] == "error")
+                        if (ticketStatus0 != "ticket" || ticketStatus1 != "ticket" || ticketStatus2 != "ticket")
                         {// No tickets, go to next triad corner 
                             Console.Out.WriteLine("Get ticket commands failed for guid " + guid_id);
                             corner++;
@@ -310,16 +312,18 @@ namespace Foundation
                         }
                         else
                         {
+                            Console.Out.WriteLine("Three good tickets to fix AN " + guid_id);
                             // Has three good tickets   
-                            fix_result = this.agent[guid_id].fix(fixer.currentTriad, tickets[0], tickets[1], tickets[2], returnCoin.ans[guid_id]);
+                            fix_result = this.agent[guid_id].fix(fixer.currentTriad, ticket1, ticket2, ticket3, returnCoin.ans[guid_id]);
                             if (fix_result == "success")
                             {
-                                Console.Out.WriteLine("GUID fixed for guid " + guid_id);
+                                Console.Out.WriteLine("GUID fixed for guid " + guid_id + " fix_result = " + fix_result);
                                 returnCoin.pastStatus[guid_id] = "pass";
                                 fixer.finnished = true;
                             }
                             else
                             { // command failed,  need to try another corner
+                                Console.Out.WriteLine("GUID FAILED. Need to try another corner for guid " + guid_id + " fix_result = " + fix_result);
                                 corner++;
                                 fixer.setCornerToCheck(corner);
                             }//end if else fix was successful
@@ -327,6 +331,7 @@ namespace Foundation
                     }//end while fixer not finnihsed. 
                 }// end if guid is fail
             }//end for all the guids
+
             DateTime after = DateTime.Now;
             TimeSpan ts = after.Subtract(before);
             Console.WriteLine("It took this many ms to fix the guid: " + ts.Milliseconds);
@@ -363,6 +368,7 @@ namespace Foundation
 
             foreach (Thread myThread in fixThread)
             {
+                //Console.Out.WriteLine("Starting a get ticket thread.");
                 myThread.Start();
                 if (!myThread.Join(TimeSpan.FromSeconds(milliSecondsToTimeOut)))
                 {
@@ -381,32 +387,65 @@ namespace Foundation
         public void fixThread0()
         {
             agent[working_triad[0]].get_ticket(working_nn, working_sn, working_ans[0], working_getDenomination);
-            Console.Out.WriteLine(agent[working_triad[0]].lastRequest);
-            Console.Out.WriteLine();
-            if (agent[working_triad[0]].lastResponse.Contains("fail")) { Console.ForegroundColor = ConsoleColor.Red; } else { Console.ForegroundColor = ConsoleColor.Green; }
-            Console.Out.WriteLine(agent[working_triad[0]].lastResponse);
-            Console.Out.WriteLine();
-            Console.ForegroundColor = ConsoleColor.White;
+          //  Console.Out.WriteLine(agent[working_triad[0]].lastRequest);
+           // Console.Out.WriteLine();
+            if (agent[working_triad[0]].lastResponse.Contains("ticket"))
+            {
+                ticketStatus0 = "ticket";
+                ticket1 = agent[working_triad[0]].lastTicket;
+               // Console.ForegroundColor = ConsoleColor.Green;
+            }
+            else
+            {
+                ticketStatus0 = "fail";
+                //Console.ForegroundColor = ConsoleColor.Red;
+            }//end if ticket fail
+          //  Console.Out.WriteLine("ticketStatus 0 " + ticketStatus0 + ", ticket 1 " + ticket1);
+          //  Console.Out.WriteLine(agent[working_triad[0]].lastResponse);
+           // Console.Out.WriteLine();
+           // Console.ForegroundColor = ConsoleColor.White;
         }
         public void fixThread1()
         {
             agent[working_triad[1]].get_ticket(working_nn, working_sn, working_ans[1], working_getDenomination);
             Console.Out.WriteLine(agent[working_triad[1]].lastRequest);
             Console.Out.WriteLine();
-            if (agent[working_triad[1]].lastResponse.Contains("fail")) { Console.ForegroundColor = ConsoleColor.Red; } else { Console.ForegroundColor = ConsoleColor.Green; }
-            Console.Out.WriteLine(agent[working_triad[1]].lastResponse);
-            Console.Out.WriteLine();
-            Console.ForegroundColor = ConsoleColor.White;
+            if (agent[working_triad[1]].lastResponse.Contains("ticket"))
+            {
+                ticketStatus1 = "ticket";
+                ticket2 = agent[working_triad[1]].lastTicket;
+                //Console.ForegroundColor = ConsoleColor.Green;
+            }
+            else
+            {
+                ticketStatus1 = "fail";
+               // Console.ForegroundColor = ConsoleColor.Red;
+            }
+           // Console.Out.WriteLine("ticketStatus 1 " + ticketStatus1 + ", ticket 2 " + ticket2);
+          //  Console.Out.WriteLine(agent[working_triad[1]].lastResponse);
+           // Console.Out.WriteLine();
+           // Console.ForegroundColor = ConsoleColor.White;
         }
         public void fixThread2()
         {
             agent[working_triad[2]].get_ticket(working_nn, working_sn, working_ans[2], working_getDenomination);
-            Console.Out.WriteLine(agent[working_triad[2]].lastRequest);
-            Console.Out.WriteLine();
-            if (agent[working_triad[2]].lastResponse.Contains("fail")) { Console.ForegroundColor = ConsoleColor.Red; } else { Console.ForegroundColor = ConsoleColor.Green; }
-            Console.Out.WriteLine(agent[working_triad[2]].lastResponse);
-            Console.Out.WriteLine();
-            Console.ForegroundColor = ConsoleColor.White;
+           // Console.Out.WriteLine(agent[working_triad[2]].lastRequest);
+          //  Console.Out.WriteLine();
+            if (agent[working_triad[2]].lastResponse.Contains("ticket"))
+            {
+                ticketStatus2 = "ticket";
+                ticket3 = agent[working_triad[2]].lastTicket;
+                Console.ForegroundColor = ConsoleColor.Green;
+            }
+            else 
+            {
+                ticketStatus2 = "fail";
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+           // Console.Out.WriteLine("ticketStatus 2 " + ticketStatus2 + ", ticket 3 " + ticket3);
+           // Console.Out.WriteLine(agent[working_triad[2]].lastResponse);
+            //Console.Out.WriteLine();
+           // Console.ForegroundColor = ConsoleColor.White;
         }
 
 

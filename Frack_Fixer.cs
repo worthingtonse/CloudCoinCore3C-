@@ -6,13 +6,14 @@ namespace Foundation
 {
     class Frack_Fixer
     {
-        //  instance variables - replace the example below with your own
+        /* INSTANCE VARIABLES */
         private FileUtils fileUtils;
         private int totalValueToBank;
         private int totalValueToFractured;
         private int totalValueToCounterfeit;
         private RAIDA raida;
 
+        /* CONSTRUCTORS */
         public Frack_Fixer(FileUtils fileUtils, int timeout)
         {
             this.fileUtils = fileUtils;
@@ -23,40 +24,47 @@ namespace Foundation
         }//constructor
 
 
-        /* Loads all fracked coins and tries to fix them. */
+        /* PUBLIC METHODS */
         public int[] fixAll()
         {
             int[] results = new int[3];
             String[] frackedFileNames = new DirectoryInfo(this.fileUtils.frackedFolder ).GetFiles().Select(o => o.Name).ToArray();
             CloudCoin frackedCC;
-            Console.WriteLine("UnFracking coin 1 of " + frackedFileNames.Length);
-            for ( int j = 0; j < frackedFileNames.Length; j++ )
+           // Console.WriteLine("UnFracking coin 1 of " + frackedFileNames.Length);
+            for ( int i = 0; i < frackedFileNames.Length; i++ )
             {
                 try
                 {
-                    frackedCC = fileUtils.loadOneCloudCoinFromJsonFile( this.fileUtils.frackedFolder + frackedFileNames[j] );
-                    Console.WriteLine( "UnFracking SN #" + frackedCC.sn + ", Denomination: " + frackedCC.getDenomination() );
+                    frackedCC = fileUtils.loadOneCloudCoinFromJsonFile( this.fileUtils.frackedFolder + frackedFileNames[i] );
+                 //   Console.WriteLine( "UnFracking SN " + frackedCC.sn + ", Denomination: " + frackedCC.getDenomination() );
+
+                  String value = frackedCC.aoid["fracked"];
+                  // Console.WriteLine("Fracked value is of the frackedCC is in frack_fixer " + value);
+                  //  Console.WriteLine("pastestatus for one " + frackedCC.pastStatus[0]);
 
                     CloudCoin fixedCC = this.raida.fixCoin( frackedCC ); // Will attempt to unfrack the coin. 
-
+                    
                     fixedCC.consoleReport();
                     switch (fixedCC.extension)
                     {
                         case "bank":
                             this.totalValueToBank++;
                             this.fileUtils.writeTo(this.fileUtils.bankFolder, fixedCC);
-                            break;
-                        case "fractured":
-                            this.totalValueToFractured++;
-                            this.fileUtils.writeTo(this.fileUtils.frackedFolder, fixedCC);
+                            this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[i]);
                             break;
                         case "counterfeit":
                             this.totalValueToCounterfeit++;
                             this.fileUtils.writeTo(this.fileUtils.counterfeitFolder, fixedCC);
+                            this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[i]);
+                            break;
+                        default://Move back to fracked folder
+                            this.totalValueToFractured++;
+                            this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[i]);
+                            this.fileUtils.writeTo(this.fileUtils.frackedFolder, fixedCC);
                             break;
                     }
                     // end switch on the place the coin will go 
-                    this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[j]);
+                    
                 }
                 catch (FileNotFoundException ex)
                 {

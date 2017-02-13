@@ -5,8 +5,8 @@ namespace Foundation
 {
     class Program
     {
+        /* INSTANCE VARIABLES */
         public static KeyboardReader reader = new KeyboardReader();
-
         //  public static String rootFolder = System.getProperty("user.dir") + File.separator +"bank" + File.separator ;
         public static String rootFolder = ("C:\\CloudCoins" + Path.DirectorySeparatorChar);
         public static String importFolder = (rootFolder + "Import" + Path.DirectorySeparatorChar);
@@ -22,26 +22,19 @@ namespace Foundation
         public static String prompt = "Start Mode> ";
         public static String[] commandsAvailable = new String[] { "show coins", "import", "export", "show folders", "fix fracked", "quit" };
         //public static String[] commandsAvailable = new String[] { "import", "show coins", "export", "fix fracked", "quit", "show folders", "test echo", "test detect", "test get_ticket", "test hints", "test fix", };
-
-        public static int timeout = 3000;
-
-
-        // Milliseconds to wait until the request is ended. 
+        public static int timeout = 2000; // Milliseconds to wait until the request is ended. 
         public static FileUtils fileUtils = new FileUtils(rootFolder, importFolder, importedFolder, trashFolder, suspectFolder, frackedFolder, bankFolder, templateFolder, counterfeitFolder, directoryFolder, exportFolder);
-
         public static Random myRandom = new Random();
 
-        // This is used for naming new chests
+        /* MAIN METHOD */
         public static void Main(String[] args)
         {
-            // Console.SetWindowSize(210, 74);
             printWelcome();
-            run();
-            // Makes all commands available and loops
+            run(); // Makes all commands available and loops
             Console.Out.WriteLine("Thank you for using RAIDA Tester 1. Goodbye.");
-        }
+        } // End main
 
-        // End main
+        /* STATIC METHODS */
         public static void run()
         {
             bool restart = false;
@@ -84,10 +77,9 @@ namespace Foundation
                         break;
                 }// end switch
             }// end while
-        }
+        }// end run method
 
 
-        // end run method
         public static void printWelcome()
         {
             Console.Out.WriteLine("Welcome to RAIDA Tester. A CloudCoin Consortium Opensource.");
@@ -129,25 +121,25 @@ namespace Foundation
             else {
                 Console.Out.WriteLine("You have no fracked Coins!");
             }//end if not showCoins
-        }
+        }// end show
 
-        // end show
+
         public static void showFolders()
         {
-            Console.Out.WriteLine(("Your Root folder is " + rootFolder));
-            Console.Out.WriteLine(("Your Import folder is " + importFolder));
-            Console.Out.WriteLine(("Your Imported folder is " + importedFolder));
-            Console.Out.WriteLine(("Your Suspect folder is " + suspectFolder));
-            Console.Out.WriteLine(("Your Trash folder is " + trashFolder));
-            Console.Out.WriteLine(("Your Bank folder is " + bankFolder));
-            Console.Out.WriteLine(("Your Fracked folder is " + frackedFolder));
-            Console.Out.WriteLine(("Your Templates folder is " + templateFolder));
-            Console.Out.WriteLine(("Your Directory folder is " + directoryFolder));
-            Console.Out.WriteLine(("Your Counterfeits folder is " + counterfeitFolder));
-            Console.Out.WriteLine(("Your Export folder is " + exportFolder));
-        }
+            Console.Out.WriteLine("Your Root folder is " + rootFolder);
+            Console.Out.WriteLine("Your Import folder is " + importFolder);
+            Console.Out.WriteLine("Your Imported folder is " + importedFolder);
+            Console.Out.WriteLine("Your Suspect folder is " + suspectFolder);
+            Console.Out.WriteLine("Your Trash folder is " + trashFolder);
+            Console.Out.WriteLine("Your Bank folder is " + bankFolder);
+            Console.Out.WriteLine("Your Fracked folder is " + frackedFolder);
+            Console.Out.WriteLine("Your Templates folder is " + templateFolder);
+            Console.Out.WriteLine("Your Directory folder is " + directoryFolder);
+            Console.Out.WriteLine("Your Counterfeits folder is " + counterfeitFolder);
+            Console.Out.WriteLine("Your Export folder is " + exportFolder);
+        } // end show folders
 
-        // end show folders
+
         public static void import()
         {
             Console.Out.WriteLine("This software loads .chest, .stack and .jpg coins into your bank folder.");
@@ -185,15 +177,9 @@ namespace Foundation
                 Console.Out.WriteLine(("Total Counterfeit: " + detectionResults[1]));
                 showCoins();
             }//end if coins to import
+        }   // end import
 
-           
-        }
 
-       
-
-        
-
-        // end import
         public static void export()
         {
             Banker bank = new Banker(fileUtils);
@@ -268,14 +254,14 @@ namespace Foundation
 
             // end if type jpge or stack
             Console.Out.WriteLine("Exporting CloudCoins Completed.");
-        }
+        }// end export One
 
-        // end export One
         public static void fix() {
             Console.Out.WriteLine("Attempting attempt to fix all fracked coins.");
             Frack_Fixer fixer = new Frack_Fixer(fileUtils, timeout);
             fixer.fixAll();
         }//end fix
+
 
     }//End class
 }//end namespace

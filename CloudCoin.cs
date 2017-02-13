@@ -38,11 +38,27 @@ namespace Foundation
             this.fileName = this.getDenomination() + ".CloudCoin." + this.nn + "." + this.sn + ".";
             this.json = "";
             this.jpeg = null;
-            for (int i = 0; (i < 25); i++)
+            for (int i = 0; i < 25; i++)//For every AN
             {
                 this.pans[i] = this.generatePan();
                 this.pastStatus[i] = "undetected";
+                if ( aoid.ContainsKey("fracked") )
+                {//If there is a fracuted key value
+                   // Console.WriteLine("CloudCoin fracked char  " + i  + " is " + aoid["fracked"][i] );
+                    switch (aoid["fracked"][i])
+                    {
+                        case 'p': this.pastStatus[i] = "pass"; break;
+                        case 'f': this.pastStatus[i] = "fail"; break;
+                        case 'u': this.pastStatus[i] = "undetected"; break;
+                        case 'e': this.pastStatus[i] = "error"; break;
+                        default: this.pastStatus[i] = "undetected"; break;
+                    }//end switch on past status
+                }//end if has fracked aoid key
+               // Console.WriteLine("CloudCoin past status is  " + pastStatus[i]);
             } // end for each pan
+              //  String value = aoid["fracked"];
+              //  Console.WriteLine("Fracked value in the coin constructor in CLoudCOin  is " + value);
+            
         }//end constructor
 
         public CloudCoin()
@@ -134,7 +150,12 @@ namespace Foundation
             }
 
             // for each status
-            this.aoid.Add("fracked", internalAoid);
+            if (aoid.ContainsKey("fracked"))
+            {
+                this.aoid.Remove("fracked");
+                this.aoid.Add("fracked", internalAoid);
+            }
+           
             // Calculate passed
             if ((passed == 25))
             {
@@ -267,21 +288,29 @@ namespace Foundation
             String passedDesc = "";
             String failedDesc = "";
             String otherDesc = "";
+            String fracked = "";
             for (int i = 0; (i < 25); i++)
             {
                 if (this.pastStatus[i] == "pass")
                 {
                     passed++;
+                    fracked += 'p';
                 }
                 else if (this.pastStatus[i] == "fail")
                 {
                     failed++;
+                    fracked += 'f';
                 }
                 else
                 {
                     other++;
+                    fracked += 'u';
                 }// end if pass, fail or unknown
             }
+            if( aoid.ContainsKey("fracked"))
+            { aoid.Remove("fracked");
+            }
+            aoid.Add("fracked", fracked);
 
             // for each status
             // Calculate passed

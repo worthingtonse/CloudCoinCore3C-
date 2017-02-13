@@ -45,23 +45,16 @@ namespace Foundation
         /* This loads a JSON file (.stack) from the hard drive that contains only one CloudCoin and turns it into an object.  */
         public CloudCoin loadOneCloudCoinFromJsonFile(String loadFilePath)
         {
-
-
             //Load file as JSON
             String incomeJson = this.importJSON(loadFilePath);
             //STRIP UNESSARY test
             int secondCurlyBracket = ordinalIndexOf(incomeJson, "{", 2) - 1;
-            int firstCloseCurlyBracket = ordinalIndexOf(incomeJson, "}", 0) - secondCurlyBracket;
+            int firstCloseCurlyBracket = ordinalIndexOf(incomeJson, "}", 0);
             // incomeJson = incomeJson.Substring(secondCurlyBracket, firstCloseCurlyBracket);
             incomeJson = incomeJson.Substring(secondCurlyBracket, firstCloseCurlyBracket - secondCurlyBracket + 1);
             // Console.Out.WriteLine(incomeJson);
 
             String[] jsonArray = incomeJson.Split('"');
-
-            //  for (int i = 0; i < jsonArray.Length; i++ )
-            //  {
-            //      Console.Out.WriteLine( i  + " = " + jsonArray[i]);
-            //  }
 
             int nn = Convert.ToInt32(jsonArray[3]);
             int sn = Convert.ToInt32(jsonArray[7]);
@@ -74,38 +67,18 @@ namespace Foundation
             }
 
             String ed = jsonArray[63];
-            String aoid = "";
-            // Console.Out.WriteLine(jsonArray.Length);
-            if (jsonArray.Length > 67)
-            {//If there is an aoid
-                aoid = jsonArray[67];
-            }
-
-
             Dictionary<string, string> aoid_dictionary = new Dictionary<string, string>();
-
-            if (aoid.Contains("="))
-            {//see if the string contains an equals sign
-                String[] keyvalue = aoid.Split('=');
-                aoid_dictionary.Add(keyvalue[0], keyvalue[1]);//index 0 is the key index 1 is the value.
+            aoid_dictionary.Add("memo", "");
+            String frackedCodes ="";
+            // Console.Out.WriteLine(jsonArray.Length);
+            if (incomeJson.Contains("fracked"))//If there is an fracked note that explains the status "fracked=ppppppppfppppppppppppppp"
+            {
+                frackedCodes = incomeJson.Substring(incomeJson.IndexOf("fracked") + 10, 25);
+                Console.WriteLine(frackedCodes);
+                aoid_dictionary.Add("fracked", frackedCodes);
             }
-            else
-            { //There is something there but not a key value pair. Treak it like a memo
-                aoid_dictionary.Add("memo", aoid);
-            }//end if cointains an = 
-
 
             CloudCoin returnCC = new CloudCoin(nn, sn, ans, ed, aoid_dictionary, "suspect");
-            for (int i = 0; (i < 25); i++)
-            {//All newly created loaded coins get new PANs. 
-                returnCC.pans[i] = returnCC.generatePan();
-                returnCC.pastStatus[i] = "undetected";
-            } // end for each pan
-              //Return Coin
-
-            returnCC.fileName = (returnCC.getDenomination() + (".CloudCoin." + (returnCC.nn + ("." + (returnCC.sn + ".")))));
-            returnCC.json = "";
-            returnCC.jpeg = null;
 
             return returnCC;
         }//end load one CloudCoin from JSON
@@ -211,7 +184,6 @@ namespace Foundation
             return returnCC;
         }//end load one CloudCoin from JSON
 
-      
         public String importJSON(String jsonfile)
         {
             String jsonData = "";
@@ -222,7 +194,7 @@ namespace Foundation
                 // Create an instance of StreamReader to read from a file.
                 // The using statement also closes the StreamReader.
 
-                using (StreamReader sr = new StreamReader(jsonfile))
+                using (StreamReader sr = new StreamReader(jsonfile, Encoding.Default, false, 2000))
                 {
                     // Read and display lines from the file until the end of 
                     // the file is reached.
@@ -323,24 +295,12 @@ namespace Foundation
             String fullHexSN = "";
             switch (hexSN.Length)
             {
-                case 1:
-                    fullHexSN = ("00000" + hexSN);
-                    break;
-                case 2:
-                    fullHexSN = ("0000" + hexSN);
-                    break;
-                case 3:
-                    fullHexSN = ("000" + hexSN);
-                    break;
-                case 4:
-                    fullHexSN = ("00" + hexSN);
-                    break;
-                case 5:
-                    fullHexSN = ("0" + hexSN);
-                    break;
-                case 6:
-                    fullHexSN = hexSN;
-                    break;
+                case 1:fullHexSN = ("00000" + hexSN);   break;
+                case 2:fullHexSN = ("0000" + hexSN);    break;
+                case 3: fullHexSN = ("000" + hexSN);    break;
+                case 4:fullHexSN = ("00" + hexSN);      break;
+                case 5: fullHexSN = ("0" + hexSN);   break;
+                case 6:fullHexSN = hexSN;     break;
             }
             cloudCoinStr = (cloudCoinStr + fullHexSN);
             byte[] ccArray = this.hexStringToByteArray(cloudCoinStr);
@@ -350,9 +310,9 @@ namespace Foundation
             byte[] jpegBytes = null;
             switch (cc.getDenomination())
             {
-                case 1: jpegBytes = readAllBytes(this.templateFolder + "jpeg1.jpg"); break;
-                case 5: jpegBytes = readAllBytes(this.templateFolder + "jpeg5.jpg"); break;
-                case 25: jpegBytes = readAllBytes(this.templateFolder + "jpeg25.jpg");break;
+                case   1: jpegBytes = readAllBytes(this.templateFolder + "jpeg1.jpg"); break;
+                case   5: jpegBytes = readAllBytes(this.templateFolder + "jpeg5.jpg"); break;
+                case  25: jpegBytes = readAllBytes(this.templateFolder + "jpeg25.jpg"); break;
                 case 100: jpegBytes = readAllBytes(this.templateFolder + "jpeg100.jpg"); break;
                 case 250: jpegBytes = readAllBytes(this.templateFolder + "jpeg250.jpg"); break;
             }// end switch
@@ -422,7 +382,7 @@ namespace Foundation
             alreadyExists = false;
             return alreadyExists;
 
-        }//Write To
+        }//End Write To
 
         private CloudCoin parseJpeg(String wholeString)
         {
