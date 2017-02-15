@@ -282,7 +282,7 @@ namespace Foundation
             bool fileSavedSuccessfully = true;
 
             /* BUILD THE CLOUDCOIN STRING */
-            String cloudCoinStr = ""; //This is the coin that will be put into the jpeg file. 
+            String cloudCoinStr = "01C34A46494600010101006000601D05"; //THUMBNAIL HEADER BYTES
             for (int i = 0; (i < 25); i++)
             {
                 cloudCoinStr = cloudCoinStr + cc.ans[i];
@@ -304,46 +304,58 @@ namespace Foundation
                 case 6:fullHexSN = hexSN;     break;
             }
             cloudCoinStr = (cloudCoinStr + fullHexSN);
+            /* BYTES THAT WILL GO FROM 04 to 454 (Inclusive)*/
             byte[] ccArray = this.hexStringToByteArray(cloudCoinStr);
-            int offset = 20;
+            
 
             /* READ JPEG TEMPLATE*/
             byte[] jpegBytes = null;
             switch (cc.getDenomination())
             {
-                case   1: jpegBytes = readAllBytes(this.templateFolder + "jpeg1.jpg"); break;
-                case   5: jpegBytes = readAllBytes(this.templateFolder + "jpeg5.jpg"); break;
-                case  25: jpegBytes = readAllBytes(this.templateFolder + "jpeg25.jpg"); break;
+                case   1: jpegBytes = readAllBytes(this.templateFolder + "jpeg1.jpg");   break;
+                case   5: jpegBytes = readAllBytes(this.templateFolder + "jpeg5.jpg");   break;
+                case  25: jpegBytes = readAllBytes(this.templateFolder + "jpeg25.jpg");  break;
                 case 100: jpegBytes = readAllBytes(this.templateFolder + "jpeg100.jpg"); break;
                 case 250: jpegBytes = readAllBytes(this.templateFolder + "jpeg250.jpg"); break;
             }// end switch
 
-            /* OVERWRITE THE BYTES IN THE JPEG WITH THE COIN BYTES*/
-            for (int j = 0; j < ccArray.Length; j++)
-            {
-                jpegBytes[offset + j] = ccArray[j];
-            }
-
-            string fileName = exportFolder + cc.fileName + tag + ".jpg";
-            File.WriteAllBytes(fileName, jpegBytes);
 
             /* WRITE THE SERIAL NUMBER ON THE JPEG */
-            /*
-             * string fileName2 = exportFolder + cc.fileName + "savetest.jpg";
+ 
             Bitmap bitmapimage;
             using (var ms = new MemoryStream(jpegBytes))
             {
                 bitmapimage = new Bitmap(ms);
-                bitmapimage.Save(fileName2, ImageFormat.Jpeg);
+               // bitmapimage.Save(fileName2, ImageFormat.Jpeg);
             }
             Graphics graphics = Graphics.FromImage(bitmapimage);
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
             graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
             PointF drawPointAddress = new PointF(10.0F, 10.0F);
-            graphics.DrawString(String.Format("{0:N0}", cc.sn) + " / 16,777,215 on Network: 1", new Font("Arial", 20), Brushes.White, drawPointAddress);
-            bitmapimage.Save(fileName, ImageFormat.Jpeg);
-            bitmapimage.Dispose();
-            */
+            graphics.DrawString(String.Format("{0:N0}", cc.sn) + " of 16,777,216 on Network: 1", new Font("Arial", 20), Brushes.White, drawPointAddress);
+
+            ImageConverter converter = new ImageConverter();
+            byte[] snBytes = (byte[])converter.ConvertTo(bitmapimage, typeof(byte[]));
+
+            List<byte> b1 = new List<byte>(snBytes);
+            List<byte> b2 = new List<byte>(ccArray);
+            b1.InsertRange( 4, b2);
+            
+
+
+           // bitmapimage.Save(fileName, ImageFormat.Jpeg);
+           // bitmapimage.Dispose();
+           
+            //Merg bytes together
+
+            /* OVERWRITE THE BYTES IN THE JPEG WITH THE COIN BYTES*/
+           // for (int j = 0; j < ccArray.Length; j++)
+           // {
+           //     jpegBytes[offset + j] = ccArray[j];
+           // }
+
+            string fileName = exportFolder + cc.fileName + tag + ".jpg";
+            File.WriteAllBytes(fileName, b1.ToArray());
 
             return fileSavedSuccessfully;
         }//end write JPEG

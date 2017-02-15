@@ -106,7 +106,7 @@ namespace Foundation
             }
             if (raidaIsDetecting[11])
             {
-                ThreadStart detectThread11Start = new ThreadStart(detectThread1);
+                ThreadStart detectThread11Start = new ThreadStart(detectThread11);
                 detectThread[11] = new Thread(detectThread11Start);
             }
             if (raidaIsDetecting[12])
@@ -139,19 +139,13 @@ namespace Foundation
                 ThreadStart detectThread17Start = new ThreadStart(detectThread17);
                 detectThread[17] = new Thread(detectThread17Start);
             }
-            if (raidaIsDetecting[18])
-            {
-                ThreadStart detectThread18Start = new ThreadStart(detectThread18);
-                detectThread[18] = new Thread(detectThread18Start);
-            }
+            if (raidaIsDetecting[18]) { ThreadStart detectThread18Start = new ThreadStart(detectThread18); detectThread[18] = new Thread(detectThread18Start); }
             if (raidaIsDetecting[19]) { ThreadStart detectThread19Start = new ThreadStart(detectThread19); detectThread[19] = new Thread(detectThread19Start); }
             if (raidaIsDetecting[20]) { ThreadStart detectThread20Start = new ThreadStart(detectThread20); detectThread[20] = new Thread(detectThread20Start); }
             if (raidaIsDetecting[21]) { ThreadStart detectThread21Start = new ThreadStart(detectThread21); detectThread[21] = new Thread(detectThread21Start); }
             if (raidaIsDetecting[22]) { ThreadStart detectThread22Start = new ThreadStart(detectThread22); detectThread[22] = new Thread(detectThread22Start); }
             if (raidaIsDetecting[23]) { ThreadStart detectThread23Start = new ThreadStart(detectThread23); detectThread[23] = new Thread(detectThread23Start); }
             if (raidaIsDetecting[24]) { ThreadStart detectThread24Start = new ThreadStart(detectThread24); detectThread[24] = new Thread(detectThread24Start); }
-
-
 
 
             foreach (Thread myThread in detectThread)
@@ -167,113 +161,37 @@ namespace Foundation
             }
             returnCoin.setAnsToPansIfPassed();
             returnCoin.calculateHP();
-            returnCoin.gradeCoin();
-            // sets the grade and figures out what the file extension should be (bank, fracked, counterfeit, lost
+            returnCoin.gradeCoin(); // sets the grade and figures out what the file extension should be (bank, fracked, counterfeit, lost
             returnCoin.calcExpirationDate();
             returnCoin.grade();
             return returnCoin;
         }//end detectCoin
 
-        public void detectThread0()
-        {
-            returnCoin.pastStatus[0] = agent[0].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[0], returnCoin.pans[0], returnCoin.getDenomination());
-        }
-        public void detectThread1()
-        {
-            returnCoin.pastStatus[1] = agent[1].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[1], returnCoin.pans[1], returnCoin.getDenomination());
-        }
-        public void detectThread2()
-        {
-            returnCoin.pastStatus[2] = agent[2].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[2], returnCoin.pans[2], returnCoin.getDenomination());
-        }
-        public void detectThread3()
-        {
-            returnCoin.pastStatus[3] = agent[3].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[3], returnCoin.pans[3], returnCoin.getDenomination());
-        }
-        public void detectThread4()
-        {
-            returnCoin.pastStatus[4] = agent[4].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[4], returnCoin.pans[4], returnCoin.getDenomination());
-        }
-        public void detectThread5()
-        {
-            returnCoin.pastStatus[5] = agent[5].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[5], returnCoin.pans[5], returnCoin.getDenomination());
-        }
-        public void detectThread6()
-        {
-            returnCoin.pastStatus[6] = agent[6].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[6], returnCoin.pans[6], returnCoin.getDenomination());
-        }
-        public void detectThread7()
-        {
-            returnCoin.pastStatus[7] = agent[7].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[7], returnCoin.pans[7], returnCoin.getDenomination());
-        }
-        public void detectThread8()
-        {
-            returnCoin.pastStatus[8] = agent[8].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[8], returnCoin.pans[8], returnCoin.getDenomination());
-        }
-        public void detectThread9()
-        {
-            returnCoin.pastStatus[9] = agent[9].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[9], returnCoin.pans[9], returnCoin.getDenomination());
-        }
-        public void detectThread10()
-        {
-            returnCoin.pastStatus[10] = agent[10].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[10], returnCoin.pans[10], returnCoin.getDenomination());
-        }
-        public void detectThread11()
-        {
-            returnCoin.pastStatus[11] = agent[11].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[11], returnCoin.pans[11], returnCoin.getDenomination());
-        }
-        public void detectThread12()
-        {
-            returnCoin.pastStatus[12] = agent[12].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[12], returnCoin.pans[12], returnCoin.getDenomination());
-        }
-        public void detectThread13()
-        {
-            returnCoin.pastStatus[13] = agent[13].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[13], returnCoin.pans[13], returnCoin.getDenomination());
-        }
-        public void detectThread14()
-        {
-            returnCoin.pastStatus[14] = agent[14].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[14], returnCoin.pans[14], returnCoin.getDenomination());
-        }
-        public void detectThread15()
-        {
-            returnCoin.pastStatus[15] = agent[15].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[15], returnCoin.pans[15], returnCoin.getDenomination());
-        }
-        public void detectThread16()
-        {
-            returnCoin.pastStatus[16] = agent[16].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[16], returnCoin.pans[16], returnCoin.getDenomination());
-        }
-        public void detectThread17()
-        {
-            returnCoin.pastStatus[17] = agent[17].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[17], returnCoin.pans[17], returnCoin.getDenomination());
-        }
-        public void detectThread18()
-        {
-            returnCoin.pastStatus[18] = agent[18].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[18], returnCoin.pans[18], returnCoin.getDenomination());
-        }
-        public void detectThread19()
-        {
-            returnCoin.pastStatus[19] = agent[19].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[19], returnCoin.pans[19], returnCoin.getDenomination());
-        }
-        public void detectThread20()
-        {
-            returnCoin.pastStatus[20] = agent[20].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[20], returnCoin.pans[20], returnCoin.getDenomination());
-        }
-        public void detectThread21()
-        {
-            returnCoin.pastStatus[21] = agent[21].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[21], returnCoin.pans[21], returnCoin.getDenomination());
-        }
-        public void detectThread22()
-        {
-            returnCoin.pastStatus[22] = agent[22].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[22], returnCoin.pans[22], returnCoin.getDenomination());
-        }
-        public void detectThread23()
-        {
-            returnCoin.pastStatus[23] = agent[23].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[23], returnCoin.pans[23], returnCoin.getDenomination());
-        }
-        public void detectThread24()
-        {
-            returnCoin.pastStatus[24] = agent[24].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[24], returnCoin.pans[24], returnCoin.getDenomination());
-        }
+        public void  detectThread0(){returnCoin.pastStatus[0] = agent[0].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[0], returnCoin.pans[0], returnCoin.getDenomination());}
+        public void  detectThread1(){returnCoin.pastStatus[1] = agent[1].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[1], returnCoin.pans[1], returnCoin.getDenomination());}
+        public void  detectThread2(){returnCoin.pastStatus[2] = agent[2].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[2], returnCoin.pans[2], returnCoin.getDenomination());}
+        public void  detectThread3(){returnCoin.pastStatus[3] = agent[3].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[3], returnCoin.pans[3], returnCoin.getDenomination());}
+        public void  detectThread4() {returnCoin.pastStatus[4] = agent[4].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[4], returnCoin.pans[4], returnCoin.getDenomination());}
+        public void  detectThread5(){returnCoin.pastStatus[5] = agent[5].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[5], returnCoin.pans[5], returnCoin.getDenomination()); }
+        public void  detectThread6(){ returnCoin.pastStatus[6] = agent[6].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[6], returnCoin.pans[6], returnCoin.getDenomination()); }
+        public void  detectThread7(){ returnCoin.pastStatus[7] = agent[7].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[7], returnCoin.pans[7], returnCoin.getDenomination()); }
+        public void  detectThread8() { returnCoin.pastStatus[8] = agent[8].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[8], returnCoin.pans[8], returnCoin.getDenomination()); }
+        public void  detectThread9(){returnCoin.pastStatus[9] = agent[9].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[9], returnCoin.pans[9], returnCoin.getDenomination());}
+        public void detectThread10(){returnCoin.pastStatus[10] = agent[10].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[10], returnCoin.pans[10], returnCoin.getDenomination()); }
+        public void detectThread11(){ returnCoin.pastStatus[11] = agent[11].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[11], returnCoin.pans[11], returnCoin.getDenomination());}
+        public void detectThread12() {returnCoin.pastStatus[12] = agent[12].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[12], returnCoin.pans[12], returnCoin.getDenomination());}
+        public void detectThread13(){returnCoin.pastStatus[13] = agent[13].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[13], returnCoin.pans[13], returnCoin.getDenomination());}
+        public void detectThread14() { returnCoin.pastStatus[14] = agent[14].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[14], returnCoin.pans[14], returnCoin.getDenomination());}
+        public void detectThread15() { returnCoin.pastStatus[15] = agent[15].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[15], returnCoin.pans[15], returnCoin.getDenomination());}
+        public void detectThread16(){returnCoin.pastStatus[16] = agent[16].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[16], returnCoin.pans[16], returnCoin.getDenomination());}
+        public void detectThread17(){returnCoin.pastStatus[17] = agent[17].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[17], returnCoin.pans[17], returnCoin.getDenomination());}
+        public void detectThread18() {returnCoin.pastStatus[18] = agent[18].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[18], returnCoin.pans[18], returnCoin.getDenomination()); }
+        public void detectThread19() {returnCoin.pastStatus[19] = agent[19].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[19], returnCoin.pans[19], returnCoin.getDenomination());}
+        public void detectThread20(){ returnCoin.pastStatus[20] = agent[20].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[20], returnCoin.pans[20], returnCoin.getDenomination()); }
+        public void detectThread21(){returnCoin.pastStatus[21] = agent[21].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[21], returnCoin.pans[21], returnCoin.getDenomination()); }
+        public void detectThread22(){returnCoin.pastStatus[22] = agent[22].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[22], returnCoin.pans[22], returnCoin.getDenomination());}
+        public void detectThread23(){returnCoin.pastStatus[23] = agent[23].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[23], returnCoin.pans[23], returnCoin.getDenomination()); }
+        public void detectThread24(){returnCoin.pastStatus[24] = agent[24].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[24], returnCoin.pans[24], returnCoin.getDenomination()); }
 
 
         public CloudCoin fixCoin(CloudCoin brokeCoin)

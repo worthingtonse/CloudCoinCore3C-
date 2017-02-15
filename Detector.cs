@@ -25,22 +25,21 @@ namespace Foundation
         public int[] detectAll()
         {
             // LOAD THE .suspect COINS ONE AT A TIME AND TEST THEM
-            int[] results = new int[3]; // [0] Coins to bank, [1] Coins to fracked [1] Coins to Counterfeit
+            int[] results = new int[3]; // [0] Coins to bank, [1] Coins to fracked [2] Coins to Counterfeit
             String[] suspectFileNames = new DirectoryInfo(this.fileUtils.suspectFolder).GetFiles().Select(o => o.Name).ToArray();//Get all files in suspect folder
             int totalValueToBank = 0;
             int totalValueToCounterfeit = 0;
             int totalValueToFractured = 0;
             bool coinSupect = false;
             CloudCoin newCC;
-            for (int j = 0; (j < suspectFileNames.Length); j++)
+            for (int j = 0; j < suspectFileNames.Length; j++)
             {
                 try
                 {
-                    Console.Out.WriteLine("Detecting " + j + " of " + suspectFileNames.Length + " coins to detect");
-                    newCC = this.fileUtils.loadOneCloudCoinFromJsonFile(this.fileUtils.suspectFolder + suspectFileNames[j]);
                     
+                    newCC = this.fileUtils.loadOneCloudCoinFromJsonFile(this.fileUtils.suspectFolder + suspectFileNames[j]);
+                    Console.Out.WriteLine("Now scanning coin " + j + " of " + suspectFileNames.Length + " for counterfeit. SN " + string.Format("{0:n0}", newCC.sn) + ", Denomination: " + newCC.getDenomination());
                     Console.Out.WriteLine("");
-                    Console.Out.WriteLine("Detecting SN #" + newCC.sn + ", Denomination: " + newCC.getDenomination());
 
                     CloudCoin detectedCC = this.raida.detectCoin(newCC);
                     detectedCC.calcExpirationDate();
@@ -78,7 +77,11 @@ namespace Foundation
                     }
 
                     if ( alreadyExists ) {//Coin has already been imported. Delete it from import folder move to trash.
-                        Console.Out.WriteLine("You tried to import a coin that has already been imported. Please remove it from you import folder.");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Out.WriteLine("You tried to import a coin that has already been imported.");
+                        Console.Out.WriteLine("Please remove it from you import folder.");
+                        Console.ForegroundColor = ConsoleColor.White;
+
                     }
 
                     // end switch on the place the coin will go 
@@ -88,7 +91,10 @@ namespace Foundation
                     }
                     else {
                         this.fileUtils.writeTo(this.fileUtils.suspectFolder, detectedCC);
-                        Console.Out.WriteLine("Not enough RAIDA were contacted to determine if the coin is authentic. Try again later.");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Out.WriteLine("Not enough RAIDA were contacted to determine if the coin is authentic.");
+                        Console.Out.WriteLine("Try again later.");
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                     
                 }

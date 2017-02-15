@@ -127,6 +127,7 @@ namespace Foundation
         public string readString(string[] args)
         {
             string result = this.readString();
+            result = result.ToLower();
             while (!args.Any(result.Contains))
             {
                 Console.Out.WriteLine(("Please enter one of the following: " + ConvertStringArrayToString(args)));

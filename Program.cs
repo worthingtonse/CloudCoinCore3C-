@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace Foundation
 {
@@ -40,16 +41,21 @@ namespace Foundation
             bool restart = false;
             while (!restart)
             {
-                Console.Out.WriteLine("========================================");
-                Console.Out.WriteLine(prompt + " Commands Available:");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Out.WriteLine("");
+              //  Console.Out.WriteLine("========================================");
+                Console.Out.WriteLine("");
+                Console.Out.WriteLine("Commands Available:");
+                Console.ForegroundColor = ConsoleColor.White;
                 int commandCounter = 1;
                 foreach (String command in commandsAvailable)
                 {
                     Console.Out.WriteLine(commandCounter + (". " + command));
                     commandCounter++;
                 }
-
-                Console.Out.Write(prompt + ">");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Out.Write(prompt);
+                Console.ForegroundColor = ConsoleColor.White;
                 String commandRecieved = reader.readString(commandsAvailable);
                 switch (commandRecieved.ToLower())
                 {
@@ -85,45 +91,39 @@ namespace Foundation
 
         public static void printWelcome()
         {
-            Console.Out.WriteLine("Welcome to RAIDA Tester. A CloudCoin Consortium Opensource.");
-            Console.Out.WriteLine("The Software is provided as is, with all faults, defects and errors, and without warranty of any kind.");
-            Console.Out.WriteLine("You must have an authentic CloudCoin .stack file called 'testcoin.stack' in the same folder as this program to run tests.");
-            Console.Out.WriteLine("The test coin will not be written to.");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Out.WriteLine("╔══════════════════════════════════════════════════════════════════╗");
+            Console.Out.WriteLine("║                      CloudCoin Console Bank                      ║");
+            Console.Out.WriteLine("║      This Software is provided as is with all faults, defects    ║");
+            Console.Out.WriteLine("║          and errors, and without warranty of any kind.           ║");
+            Console.Out.WriteLine("║                Free from the CloudCoin Consortium.               ║");
+            Console.Out.WriteLine("╚══════════════════════════════════════════════════════════════════╝");
+            Console.ForegroundColor = ConsoleColor.White;
         } // End print welcome
 
 
         public static void showCoins()
         {
+            Console.Out.WriteLine("");
             // This is for consol apps.
             Banker bank = new Banker(fileUtils);
             int[] bankTotals = bank.countCoins(bankFolder);
             int[] frackedTotals = bank.countCoins(frackedFolder);
             // int[] counterfeitTotals = bank.countCoins( counterfeitFolder );
 
-            Console.Out.WriteLine("Total CloudCoins in Bank:" + (bankTotals[0] + frackedTotals[0]));
-            Console.Out.WriteLine("Perfect Coins:");
+             //Output  " 12.3"
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Out.WriteLine("╔═════════════════════════════════════════════════════════════════╗");
+            Console.Out.WriteLine("║  Total Coins in Bank:    " + string.Format("{0,8}", (bankTotals[0] + frackedTotals[0])) + "                               ║");
+            Console.Out.WriteLine("╠══════════╦══════════╦══════════╦══════════╦══════════╦══════════╣");
+            Console.Out.WriteLine("║          ║    1s    ║    5s    ║    25s   ║   100s   ║   250s   ║");
+            Console.Out.WriteLine("╠══════════╬══════════╬══════════╬══════════╬══════════╬══════════╣");
+            Console.Out.WriteLine("║ Perfect: ║ "+ string.Format("{0,7}", bankTotals[1])+ "  ║ " + string.Format("{0,7}", bankTotals[2]) + "  ║ " + string.Format("{0,7}", bankTotals[3]) + "  ║ " + string.Format("{0,7}", bankTotals[4]) + "  ║ " + string.Format("{0,7}", bankTotals[5]) + "  ║");
+            Console.Out.WriteLine("╠══════════╬══════════╬══════════╬══════════╬══════════╬══════════╣");
+            Console.Out.WriteLine("║ Fracked: ║ "+ string.Format("{0,7}", frackedTotals[1]) + "  ║ " + string.Format("{0,7}", frackedTotals[2]) + "  ║ " + string.Format("{0,7}", frackedTotals[3]) + "  ║ " + string.Format("{0,7}", frackedTotals[4]) + "  ║ " + string.Format("{0,7}", frackedTotals[5]) + "  ║");
+            Console.Out.WriteLine("╚══════════╩══════════╩══════════╩══════════╩══════════╩══════════╝");
+            Console.ForegroundColor = ConsoleColor.White;
 
-            Console.Out.WriteLine("  1s: " + (bankTotals[1] ));
-            Console.Out.WriteLine("  5s: " + (bankTotals[2] ));
-            Console.Out.WriteLine(" 25s: " + (bankTotals[3] ));
-            Console.Out.WriteLine("100s: " + (bankTotals[4] ));
-            Console.Out.WriteLine("250s: " + (bankTotals[5] ));
-
-            Console.Out.WriteLine(("Total Perfect Coins: " + bankTotals[0]));
-            Console.Out.WriteLine("");
-            if (frackedTotals[0] > 0) {
-                Console.Out.WriteLine("Fracked Coins:");
-                
-                Console.Out.WriteLine("  1s: " + (frackedTotals[1]));
-                Console.Out.WriteLine("  5s: " + (frackedTotals[2]));
-                Console.Out.WriteLine(" 25s: " + (frackedTotals[3]));
-                Console.Out.WriteLine("100s: " + (frackedTotals[4]));
-                Console.Out.WriteLine("250s: " + (frackedTotals[5]));
-                Console.Out.WriteLine(("Total Fracked Coins: " + frackedTotals[0]));
-            }
-            else {
-                Console.Out.WriteLine("You have no fracked Coins!");
-            }//end if not showCoins
         }// end show
 
 
@@ -145,11 +145,25 @@ namespace Foundation
 
         public static void import()
         {
-            Console.Out.WriteLine("Loading all CloudCoins in your import folder:" + importFolder);
+            Console.Out.WriteLine("");
+            Console.ForegroundColor = ConsoleColor.Green; 
+            Console.Out.WriteLine("Loading all CloudCoins in your import folder: " + importFolder);
+            Console.ForegroundColor = ConsoleColor.White;
             Importer importer = new Importer(fileUtils);
             if (!importer.importAll())//Moves all CloudCoins from the Import folder into the Suspect folder. 
             {
-                Console.Out.WriteLine("No coins in import folder. Checking if some coins need to be authenticated.");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Out.WriteLine("No coins in import folder.");
+                Console.ForegroundColor = ConsoleColor.White;
+                //CHECK TO SEE IF THERE ARE UN DETECTED COINS IN THE SUSPECT FOLDER
+                String[] suspectFileNames = new DirectoryInfo(suspectFolder).GetFiles().Select(o => o.Name).ToArray();//Get all files in suspect folder
+                if (suspectFileNames.Length > 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Out.WriteLine("Finishing importing coins from last time...");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    detect();
+                } //end if there are files in the suspect folder that need to be imported
             }
             else
             {
@@ -158,6 +172,7 @@ namespace Foundation
         }   // end import
 
         public static void detect() {
+            Console.Out.WriteLine("");
             Console.Out.WriteLine("Detecting Authentication of Suspect Coins");
             Detector detector = new Detector(fileUtils, timeout);
             int[] detectionResults = detector.detectAll();
@@ -169,6 +184,7 @@ namespace Foundation
 
         public static void export()
         {
+            Console.Out.WriteLine("");
             Banker bank = new Banker(fileUtils);
             int[] bankTotals = bank.countCoins(bankFolder);
             int[] frackedTotals = bank.countCoins(frackedFolder);
@@ -244,6 +260,7 @@ namespace Foundation
         }// end export One
 
         public static void fix() {
+            Console.Out.WriteLine("");
             Console.Out.WriteLine("Attempting attempt to fix all fracked coins.");
             Frack_Fixer fixer = new Frack_Fixer(fileUtils, timeout);
             fixer.fixAll();

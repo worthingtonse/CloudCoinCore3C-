@@ -477,20 +477,31 @@ namespace Foundation
             Console.Out.WriteLine("");
             Console.Out.WriteLine("Authenticity Detection Report for: SN #" + this.sn + ", Denomination: " + this.getDenomination());
 
-            for (int i = 0; (i < 25); i++)
-            {
-                if (i % 5 == 0 && i != 0) // Give every five statuses a line break
-                {
-                    Console.Out.WriteLine("");
-                }
+
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Out.WriteLine("╔══════════════════════════════════════════════════════╗");
+            Console.Out.WriteLine("║  Authenticity Report SN #" + string.Format("{0,8}", this.sn) + ", Denomination: " + string.Format("{0,3}", this.getDenomination()) + " ║");
+            Console.Out.WriteLine("╠══════════╦══════════╦══════════╦══════════╦══════════╣");
+            Console.Out.Write("║    "); a(pastStatus[0]);  Console.Out.Write("     ║    "); a(pastStatus[1]);   Console.Out.Write("     ║    "); a(pastStatus[2]);  Console.Out.Write("     ║    "); a(pastStatus[3]);  Console.Out.Write("     ║    "); a(pastStatus[4]);  Console.Out.WriteLine("     ║");
+            Console.Out.WriteLine("╠══════════╬══════════╬══════════╬══════════╬══════════╣");
+            Console.Out.Write("║    "); a(pastStatus[5]); Console.Out.Write("     ║    "); a(pastStatus[6]);    Console.Out.Write("     ║    "); a(pastStatus[7]);  Console.Out.Write("     ║    "); a(pastStatus[8]);  Console.Out.Write("     ║    "); a(pastStatus[9]);  Console.Out.WriteLine("     ║");
+            Console.Out.WriteLine("╠══════════╬══════════╬══════════╬══════════╬══════════╣");
+            Console.Out.Write("║    "); a(pastStatus[10]); Console.Out.Write("     ║    "); a(pastStatus[11]);  Console.Out.Write("     ║    "); a(pastStatus[12]); Console.Out.Write("     ║    "); a(pastStatus[13]); Console.Out.Write("     ║    "); a(pastStatus[14]); Console.Out.WriteLine("     ║");
+            Console.Out.WriteLine("╠══════════╬══════════╬══════════╬══════════╬══════════╣");
+            Console.Out.Write("║    "); a(pastStatus[15]); Console.Out.Write("     ║    "); a(pastStatus[16]);  Console.Out.Write("     ║    "); a(pastStatus[17]); Console.Out.Write("     ║    "); a(pastStatus[18]); Console.Out.Write("     ║    "); a(pastStatus[19]); Console.Out.WriteLine("     ║");
+            Console.Out.WriteLine("╠══════════╬══════════╬══════════╬══════════╬══════════╣");
+            Console.Out.Write("║    "); a(pastStatus[20]); Console.Out.Write("     ║    "); a(pastStatus[21]);  Console.Out.Write("     ║    "); a(pastStatus[22]); Console.Out.Write("     ║    "); a(pastStatus[23]); Console.Out.Write("     ║    "); a(pastStatus[24]); Console.Out.WriteLine("     ║");
+            Console.Out.WriteLine("╚══════════╩══════════╩══════════╩══════════╩══════════╝");
+            Console.ForegroundColor = ConsoleColor.White;
 
                 // check if failed
-                string fmt = "00";
-                string fi = i.ToString(fmt); // Pad numbers with two digits
-                Console.Out.WriteLine("RAIDA" + i + " " + pastStatus[i] + " | ");
+              //  string fmt = "00";
+               // string fi = i.ToString(fmt); // Pad numbers with two digits
+            //    Console.Out.WriteLine("RAIDA" + i + " " + pastStatus[i] + " | ");
                // Console.Out.WriteLine("AN " + i + ans[i]);
                // Console.Out.WriteLine("PAN " + i + pans[i]);
-            }
+          //  }
 
             // End for each cloud coin GUID statu
           //  Console.Out.WriteLine("ed " + ed);
@@ -498,9 +509,17 @@ namespace Foundation
           //  Console.Out.WriteLine("edhp " + hp);
            // Console.Out.WriteLine("fileName " + fileName);
            // Console.Out.WriteLine("YEARSTILEXPIRE " + YEARSTILEXPIRE);
-            Console.Out.WriteLine("extension " + extension);
+         //   Console.Out.WriteLine("extension " + extension);
 
 
         }//Console Report
+
+        public void a(string pastStatus) {
+            if (pastStatus == "pass") {
+                Console.ForegroundColor = Console.ForegroundColor = ConsoleColor.Green; Console.Out.Write("♥"); Console.ForegroundColor = ConsoleColor.White;
+            } else {
+                Console.ForegroundColor = ConsoleColor.Red; Console.Out.Write("█"); Console.ForegroundColor = ConsoleColor.White;
+            }
+        }//end a Report helper
     }
 }

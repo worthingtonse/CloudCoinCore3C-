@@ -22,12 +22,14 @@ namespace Foundation
   
             if (fnames.Length == 0)
             {
-                Console.Out.WriteLine("There were no CloudCoins to import. Please place our CloudCoin .jpg and .stack files in your imports" + " folder at " + this.fileUtils.importFolder );
+             //   Console.Out.WriteLine("There were no CloudCoins to import. Please place our CloudCoin .jpg and .stack files in your imports" + " folder at " + this.fileUtils.importFolder );
                 return false;
             }
             else
             {
-                Console.Out.WriteLine("Importing the following files:");
+              //  Console.ForegroundColor = ConsoleColor.Green;
+              //  Console.Out.WriteLine("Importing the following files: ");
+              //  Console.ForegroundColor = ConsoleColor.White;
                 for (int i = 0; i < fnames.Length; i++)// Loop through each file. 
                 { 
                     Console.Out.WriteLine(fnames[i]);
@@ -82,12 +84,42 @@ namespace Foundation
         private bool importJPEG(String fileName)//Move one jpeg to suspect folder. 
         {
             bool isSuccessful = false;
-            Console.Out.WriteLine("Trying to load: " + this.fileUtils.importFolder + fileName );
+           // Console.Out.WriteLine("Trying to load: " + this.fileUtils.importFolder + fileName );
             try
             {
-                Console.Out.WriteLine("Loading coin: " + fileUtils.importFolder + fileName);
-                CloudCoin tempCoin = this.fileUtils.loadOneCloudCoinFromJPEGFile( fileUtils.importFolder + fileName );
-                Console.Out.WriteLine("Loaded coin filename: " + tempCoin.fileName);
+              //  Console.Out.WriteLine("Loading coin: " + fileUtils.importFolder + fileName);
+                //CloudCoin tempCoin = this.fileUtils.loadOneCloudCoinFromJPEGFile( fileUtils.importFolder + fileName );
+
+                /*Begin import from jpeg*/
+
+                /* GET the first 455 bytes of he jpeg where the coin is located */
+                String wholeString = "";
+                byte[] jpegHeader = new byte[455];
+               // Console.Out.WriteLine("Load file path " + fileUtils.importFolder + fileName);
+                FileStream fileStream = new FileStream( fileUtils.importFolder + fileName, FileMode.Open, FileAccess.Read);
+                try
+                {
+                    int count;                            // actual number of bytes read
+                    int sum = 0;                          // total number of bytes read
+
+                    // read until Read method returns 0 (end of the stream has been reached)
+                    while ((count = fileStream.Read(jpegHeader, sum, 455 - sum)) > 0)
+                        sum += count;  // sum is a buffer offset for next reading
+                }
+                finally
+                {
+                    fileStream.Close();
+                }
+                wholeString = bytesToHexString(jpegHeader);
+
+                CloudCoin tempCoin = this.parseJpeg(wholeString);
+               // Console.Out.WriteLine("From FileUtils returnCC.fileName " + tempCoin.fileName);
+
+                /*end import from jpeg file */
+
+
+
+             //   Console.Out.WriteLine("Loaded coin filename: " + tempCoin.fileName);
                 this.fileUtils.writeTo(this.fileUtils.suspectFolder, tempCoin);
                 return true;
             }
@@ -129,6 +161,68 @@ namespace Foundation
             // end try catch
             return isSuccessful;
         }
+
+        public string bytesToHexString(byte[] data)
+        {
+            if (data == null)
+            {
+                throw new ArgumentNullException("data");
+            }
+
+            int length = data.Length;
+            char[] hex = new char[length * 2];
+            int num1 = 0;
+            for (int index = 0; index < length * 2; index += 2)
+            {
+                byte num2 = data[num1++];
+                hex[index] = GetHexValue(num2 / 0x10);
+                hex[index + 1] = GetHexValue(num2 % 0x10);
+            }
+            return new string(hex);
+        }//End NewConverted
+
+
+        private char GetHexValue(int i)
+        {
+            if (i < 10)
+            {
+                return (char)(i + 0x30);
+            }
+            return (char)((i - 10) + 0x41);
+        }//end GetHexValue
+
+        private CloudCoin parseJpeg(String wholeString)
+        {
+
+            CloudCoin cc = new CloudCoin();
+            int startAn = 40;
+            for (int i = 0; i < 25; i++)
+            {
+
+                cc.ans[i] = wholeString.Substring(startAn, 32);
+                // Console.Out.WriteLine(i +": " + cc.ans[i]);
+                startAn += 32;
+            }
+
+            // end for
+            cc.aoid = null;
+            // wholeString.substring( 840, 895 );
+            cc.hp = 25;
+            // Integer.parseInt(wholeString.substring( 896, 896 ), 16);
+            cc.ed = wholeString.Substring(898, 4);
+            cc.nn = Convert.ToInt32(wholeString.Substring(902, 2), 16);
+            cc.sn = Convert.ToInt32(wholeString.Substring(904, 6), 16);
+            for (int i = 0; i < 25; i++)
+            {
+                cc.pans[i] = cc.generatePan();
+                cc.pastStatus[i] = "undetected";
+            }
+            cc.fileName = cc.getDenomination() + ".CloudCoin." + cc.nn + "." + cc.sn + ".";
+            //Console.Out.WriteLine("parseJpeg cc.fileName " + cc.fileName);
+            // end for each pan
+            return cc;
+        }// end parse Jpeg
+
 
     }//end class
 }//end namespace
