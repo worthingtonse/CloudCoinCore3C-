@@ -121,6 +121,7 @@ namespace Foundation
             }
             DateTime after = DateTime.Now; TimeSpan ts = after.Subtract(before);
             this.dms = ts.Milliseconds;
+            Console.Out.Write(" " + dms + " ");
             if (this.lastResponse.Contains("pass"))
             {
                 lastDetectStatus = "pass";
@@ -239,7 +240,7 @@ namespace Foundation
             Console.Out.Write(".");
             string data = "";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
-            request.ContinueTimeout = 2000;
+            request.ContinueTimeout = readTimeout;
             request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11";
 
             try

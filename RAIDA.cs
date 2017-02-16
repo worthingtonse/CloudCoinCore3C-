@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net;
+using System.Text;
+using System.IO;
+
 
 namespace Foundation
 {
@@ -27,7 +31,7 @@ namespace Foundation
         private int working_getDenomination;
         private int[] working_triad = { 0, 1, 2 };//place holder
         public bool[] raidaIsDetecting = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
-
+        public string[] lastDetectStatus = { "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected" };
         /* CONSTRUCTOR */
         public RAIDA(int milliSecondsToTimeOut)
         { //  initialise instance variables
@@ -39,161 +43,168 @@ namespace Foundation
             } // end for each Raida
         }//End Constructor
 
+        /*
+                public void Detect2(CloudCoin coin)
+                {   
+                    Stopwatch sw = new Stopwatch();
+                    CoinStack stack = new CoinStack(coin);
 
+
+                    Task<DetectResponse>[] tasks = new Task<DetectResponse>[25];
+                    int i = 0;
+                    sw.Start();
+                    foreach (Node node in Instance.NodesArray)
+                    {
+                        tasks[i] = Task.Factory.StartNew(() => node.Detect(coin));
+                        tasks[i].ContinueWith(ancestor => { checkCoinsWindow.ShowDetectProgress(ancestor.Result, node, coin); });
+                        i++;
+                    }
+
+                    Task checkCompleted = Task.Factory.ContinueWhenAll(tasks, delegate { checkCoinsWindow.AllCoinDetectCompleted(coin, sw); });
+                    checkCompleted.ContinueWith(delegate { checkCoinsWindow.AllStackDetectCompleted(stack, sw); });
+                }
+
+                public DetectResponse Detect(CloudCoin coin)
+                {
+                    var client = new RestClient();
+                    client.BaseUrl = BaseUri;
+                    var request = new RestRequest("detect");
+                    request.AddQueryParameter("nn", coin.nn.ToString());
+                    request.AddQueryParameter("sn", coin.sn.ToString());
+                    request.AddQueryParameter("an", coin.an[Number]);
+                    request.AddQueryParameter("pan", coin.pans[Number]);
+                    request.AddQueryParameter("denomination", Utils.Denomination2Int(coin.denomination).ToString());
+                    request.Timeout = 2000;
+                    DetectResponse getDetectResult = new DetectResponse();
+
+                    Stopwatch sw = new Stopwatch();
+                    sw.Start();
+                    try
+                    {
+                        getDetectResult = JsonConvert.DeserializeObject<DetectResponse>(client.Execute(request).Content);
+                    }
+                    catch (JsonException e)
+                    {
+                        getDetectResult = new DetectResponse(Name, coin.sn.ToString(), "Invalid response", "THe server does not respond or returns invalid data", DateTime.Now.ToString());
+                    }
+                    getDetectResult = getDetectResult ?? new DetectResponse(Name, coin.sn.ToString(), "Network problem", "Node not found", DateTime.Now.ToString());
+                    if (getDetectResult.ErrorException != null)
+                        getDetectResult = new DetectResponse(Name, coin.sn.ToString(), "Network problem", "Problems with network connection", DateTime.Now.ToString());
+
+                    sw.Stop();
+                    getDetectResult.responseTime = sw.Elapsed;
+
+                    return getDetectResult;
+                }
+                */
         /* PUBLIC METHODS */
         public CloudCoin detectCoin(CloudCoin cc)
         {
             returnCoin = cc;
-            Thread[] detectThread = new Thread[25];
 
-            if (raidaIsDetecting[0])
-            {
-                ThreadStart detectThread0Start = new ThreadStart(detectThread0);
-                detectThread[0] = new Thread(detectThread0Start);
-            }
-            if (raidaIsDetecting[1])
-            {
-                ThreadStart detectThread1Start = new ThreadStart(detectThread1);
-                detectThread[1] = new Thread(detectThread1Start);
-            }
-            if (raidaIsDetecting[2])
-            {
-                ThreadStart detectThread2Start = new ThreadStart(detectThread2);
-                detectThread[2] = new Thread(detectThread2Start);
-            }
-            if (raidaIsDetecting[3])
-            {
-                ThreadStart detectThread3Start = new ThreadStart(detectThread3);
-                detectThread[3] = new Thread(detectThread3Start);
-            }
-
-            if (raidaIsDetecting[4])
-            {
-                ThreadStart detectThread4Start = new ThreadStart(detectThread4);
-                detectThread[4] = new Thread(detectThread4Start);
-            }
-
-            if (raidaIsDetecting[5])
-            {
-                ThreadStart detectThread5Start = new ThreadStart(detectThread5);
-                detectThread[5] = new Thread(detectThread5Start);
-            }
-
-            if (raidaIsDetecting[6])
-            {
-                ThreadStart detectThread6Start = new ThreadStart(detectThread6);
-                detectThread[6] = new Thread(detectThread6Start);
-            }
-            if (raidaIsDetecting[7])
-            {
-                ThreadStart detectThread7Start = new ThreadStart(detectThread7);
-                detectThread[7] = new Thread(detectThread7Start);
-            }
-            if (raidaIsDetecting[8])
-            {
-                ThreadStart detectThread8Start = new ThreadStart(detectThread8);
-                detectThread[8] = new Thread(detectThread8Start);
-            }
-            if (raidaIsDetecting[9])
-            {
-                ThreadStart detectThread9Start = new ThreadStart(detectThread9);
-                detectThread[9] = new Thread(detectThread9Start);
-            }
-            if (raidaIsDetecting[10])
-            {
-                ThreadStart detectThread10Start = new ThreadStart(detectThread10);
-                detectThread[10] = new Thread(detectThread10Start);
-            }
-            if (raidaIsDetecting[11])
-            {
-                ThreadStart detectThread11Start = new ThreadStart(detectThread11);
-                detectThread[11] = new Thread(detectThread11Start);
-            }
-            if (raidaIsDetecting[12])
-            {
-                ThreadStart detectThread12Start = new ThreadStart(detectThread12);
-                detectThread[12] = new Thread(detectThread12Start);
-            }
-            if (raidaIsDetecting[13])
-            {
-                ThreadStart detectThread13Start = new ThreadStart(detectThread13);
-                detectThread[13] = new Thread(detectThread13Start);
-            }
-            if (raidaIsDetecting[14])
-            {
-                ThreadStart detectThread14Start = new ThreadStart(detectThread14);
-                detectThread[14] = new Thread(detectThread14Start);
-            }
-            if (raidaIsDetecting[15])
-            {
-                ThreadStart detectThread15Start = new ThreadStart(detectThread15);
-                detectThread[15] = new Thread(detectThread15Start);
-            }
-            if (raidaIsDetecting[16])
-            {
-                ThreadStart detectThread16Start = new ThreadStart(detectThread16);
-                detectThread[16] = new Thread(detectThread16Start);
-            }
-            if (raidaIsDetecting[17])
-            {
-                ThreadStart detectThread17Start = new ThreadStart(detectThread17);
-                detectThread[17] = new Thread(detectThread17Start);
-            }
-            if (raidaIsDetecting[18]) { ThreadStart detectThread18Start = new ThreadStart(detectThread18); detectThread[18] = new Thread(detectThread18Start); }
-            if (raidaIsDetecting[19]) { ThreadStart detectThread19Start = new ThreadStart(detectThread19); detectThread[19] = new Thread(detectThread19Start); }
-            if (raidaIsDetecting[20]) { ThreadStart detectThread20Start = new ThreadStart(detectThread20); detectThread[20] = new Thread(detectThread20Start); }
-            if (raidaIsDetecting[21]) { ThreadStart detectThread21Start = new ThreadStart(detectThread21); detectThread[21] = new Thread(detectThread21Start); }
-            if (raidaIsDetecting[22]) { ThreadStart detectThread22Start = new ThreadStart(detectThread22); detectThread[22] = new Thread(detectThread22Start); }
-            if (raidaIsDetecting[23]) { ThreadStart detectThread23Start = new ThreadStart(detectThread23); detectThread[23] = new Thread(detectThread23Start); }
-            if (raidaIsDetecting[24]) { ThreadStart detectThread24Start = new ThreadStart(detectThread24); detectThread[24] = new Thread(detectThread24Start); }
+            var t00 = Task.Factory.StartNew(() => detectOne(00, cc.nn, cc.sn, cc.ans[00], cc.pans[00], cc.getDenomination()));
+            var t01 = Task.Factory.StartNew(() => detectOne(01, cc.nn, cc.sn, cc.ans[01], cc.pans[01], cc.getDenomination()));
+            var t02 = Task.Factory.StartNew(() => detectOne(02, cc.nn, cc.sn, cc.ans[02], cc.pans[02], cc.getDenomination()));
+            var t03 = Task.Factory.StartNew(() => detectOne(03, cc.nn, cc.sn, cc.ans[03], cc.pans[03], cc.getDenomination()));
+            var t04 = Task.Factory.StartNew(() => detectOne(04, cc.nn, cc.sn, cc.ans[04], cc.pans[04], cc.getDenomination()));
+            var t05 = Task.Factory.StartNew(() => detectOne(05, cc.nn, cc.sn, cc.ans[05], cc.pans[05], cc.getDenomination()));
+            var t06 = Task.Factory.StartNew(() => detectOne(06, cc.nn, cc.sn, cc.ans[06], cc.pans[06], cc.getDenomination()));
+            var t07 = Task.Factory.StartNew(() => detectOne(07, cc.nn, cc.sn, cc.ans[07], cc.pans[07], cc.getDenomination()));
+            var t08 = Task.Factory.StartNew(() => detectOne(08, cc.nn, cc.sn, cc.ans[08], cc.pans[08], cc.getDenomination()));
+            var t09 = Task.Factory.StartNew(() => detectOne(09, cc.nn, cc.sn, cc.ans[09], cc.pans[09], cc.getDenomination()));
+            var t10 = Task.Factory.StartNew(() => detectOne(10, cc.nn, cc.sn, cc.ans[10], cc.pans[10], cc.getDenomination()));
+            var t11 = Task.Factory.StartNew(() => detectOne(11, cc.nn, cc.sn, cc.ans[11], cc.pans[11], cc.getDenomination()));
+            var t12 = Task.Factory.StartNew(() => detectOne(12, cc.nn, cc.sn, cc.ans[12], cc.pans[12], cc.getDenomination()));
+            var t13 = Task.Factory.StartNew(() => detectOne(13, cc.nn, cc.sn, cc.ans[13], cc.pans[13], cc.getDenomination()));
+            var t14 = Task.Factory.StartNew(() => detectOne(14, cc.nn, cc.sn, cc.ans[14], cc.pans[14], cc.getDenomination()));
+            var t15 = Task.Factory.StartNew(() => detectOne(15, cc.nn, cc.sn, cc.ans[15], cc.pans[15], cc.getDenomination()));
+            var t16 = Task.Factory.StartNew(() => detectOne(16, cc.nn, cc.sn, cc.ans[16], cc.pans[16], cc.getDenomination()));
+            var t17 = Task.Factory.StartNew(() => detectOne(17, cc.nn, cc.sn, cc.ans[17], cc.pans[17], cc.getDenomination()));
+            var t18 = Task.Factory.StartNew(() => detectOne(18, cc.nn, cc.sn, cc.ans[18], cc.pans[18], cc.getDenomination()));
+            var t19 = Task.Factory.StartNew(() => detectOne(19, cc.nn, cc.sn, cc.ans[19], cc.pans[19], cc.getDenomination()));
+            var t20 = Task.Factory.StartNew(() => detectOne(20, cc.nn, cc.sn, cc.ans[20], cc.pans[20], cc.getDenomination()));
+            var t21 = Task.Factory.StartNew(() => detectOne(21, cc.nn, cc.sn, cc.ans[21], cc.pans[21], cc.getDenomination()));
+            var t22 = Task.Factory.StartNew(() => detectOne(22, cc.nn, cc.sn, cc.ans[22], cc.pans[22], cc.getDenomination()));
+            var t23 = Task.Factory.StartNew(() => detectOne(23, cc.nn, cc.sn, cc.ans[23], cc.pans[23], cc.getDenomination()));
+            var t24 = Task.Factory.StartNew(() => detectOne(24, cc.nn, cc.sn, cc.ans[24], cc.pans[24], cc.getDenomination()));
 
 
-            foreach (Thread myThread in detectThread)
+            var taskList = new List<Task> { t00, t01, t02, t03, t04, t05, t06, t07, t08, t09, t10, t11 , t12 , t13 , t14 , t15 , t16 , t17 , t18 , t19 , t20 , t21 , t22 , t23,  t24   };
+            Task.WaitAll( taskList.ToArray(), milliSecondsToTimeOut);
+            //Get data from the detection agents
+
+            for (int i = 0; i < 25; i++)
             {
-                if (myThread != null)
-                {
-                    myThread.Start();
-                    if (!myThread.Join(TimeSpan.FromSeconds(milliSecondsToTimeOut)))
-                    {
-                        myThread.Abort();
-                    }//End if timeout. 
-                }//End start each thread for each
-            }
+                returnCoin.pastStatus[i] = lastDetectStatus[i];
+            }//end for each detection agent
+
             returnCoin.setAnsToPansIfPassed();
             returnCoin.calculateHP();
             returnCoin.gradeCoin(); // sets the grade and figures out what the file extension should be (bank, fracked, counterfeit, lost
             returnCoin.calcExpirationDate();
             returnCoin.grade();
+
             return returnCoin;
-        }//end detectCoin
-
-        public void  detectThread0(){returnCoin.pastStatus[0] = agent[0].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[0], returnCoin.pans[0], returnCoin.getDenomination());}
-        public void  detectThread1(){returnCoin.pastStatus[1] = agent[1].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[1], returnCoin.pans[1], returnCoin.getDenomination());}
-        public void  detectThread2(){returnCoin.pastStatus[2] = agent[2].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[2], returnCoin.pans[2], returnCoin.getDenomination());}
-        public void  detectThread3(){returnCoin.pastStatus[3] = agent[3].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[3], returnCoin.pans[3], returnCoin.getDenomination());}
-        public void  detectThread4() {returnCoin.pastStatus[4] = agent[4].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[4], returnCoin.pans[4], returnCoin.getDenomination());}
-        public void  detectThread5(){returnCoin.pastStatus[5] = agent[5].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[5], returnCoin.pans[5], returnCoin.getDenomination()); }
-        public void  detectThread6(){ returnCoin.pastStatus[6] = agent[6].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[6], returnCoin.pans[6], returnCoin.getDenomination()); }
-        public void  detectThread7(){ returnCoin.pastStatus[7] = agent[7].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[7], returnCoin.pans[7], returnCoin.getDenomination()); }
-        public void  detectThread8() { returnCoin.pastStatus[8] = agent[8].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[8], returnCoin.pans[8], returnCoin.getDenomination()); }
-        public void  detectThread9(){returnCoin.pastStatus[9] = agent[9].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[9], returnCoin.pans[9], returnCoin.getDenomination());}
-        public void detectThread10(){returnCoin.pastStatus[10] = agent[10].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[10], returnCoin.pans[10], returnCoin.getDenomination()); }
-        public void detectThread11(){ returnCoin.pastStatus[11] = agent[11].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[11], returnCoin.pans[11], returnCoin.getDenomination());}
-        public void detectThread12() {returnCoin.pastStatus[12] = agent[12].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[12], returnCoin.pans[12], returnCoin.getDenomination());}
-        public void detectThread13(){returnCoin.pastStatus[13] = agent[13].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[13], returnCoin.pans[13], returnCoin.getDenomination());}
-        public void detectThread14() { returnCoin.pastStatus[14] = agent[14].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[14], returnCoin.pans[14], returnCoin.getDenomination());}
-        public void detectThread15() { returnCoin.pastStatus[15] = agent[15].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[15], returnCoin.pans[15], returnCoin.getDenomination());}
-        public void detectThread16(){returnCoin.pastStatus[16] = agent[16].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[16], returnCoin.pans[16], returnCoin.getDenomination());}
-        public void detectThread17(){returnCoin.pastStatus[17] = agent[17].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[17], returnCoin.pans[17], returnCoin.getDenomination());}
-        public void detectThread18() {returnCoin.pastStatus[18] = agent[18].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[18], returnCoin.pans[18], returnCoin.getDenomination()); }
-        public void detectThread19() {returnCoin.pastStatus[19] = agent[19].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[19], returnCoin.pans[19], returnCoin.getDenomination());}
-        public void detectThread20(){ returnCoin.pastStatus[20] = agent[20].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[20], returnCoin.pans[20], returnCoin.getDenomination()); }
-        public void detectThread21(){returnCoin.pastStatus[21] = agent[21].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[21], returnCoin.pans[21], returnCoin.getDenomination()); }
-        public void detectThread22(){returnCoin.pastStatus[22] = agent[22].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[22], returnCoin.pans[22], returnCoin.getDenomination());}
-        public void detectThread23(){returnCoin.pastStatus[23] = agent[23].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[23], returnCoin.pans[23], returnCoin.getDenomination()); }
-        public void detectThread24(){returnCoin.pastStatus[24] = agent[24].detect(returnCoin.nn, returnCoin.sn, returnCoin.ans[24], returnCoin.pans[24], returnCoin.getDenomination()); }
+        }//end detect coin
 
 
+        public void detectOne(int i, int nn, int sn, String an, String pan, int d)
+        {
+            string urlAddress = "https://raida"+ i +".cloudcoin.global/service/detect?nn=" + nn + "&sn=" + sn + "&an=" + an + "&pan=" + pan + "&denomination=" + d + "&b=t";
+           // Console.Out.Write(".");
+            string data = "";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
+           // request.ContinueTimeout = readTimeout;
+            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11";
+            DateTime before = DateTime.Now;
+            try
+            {
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    Stream receiveStream = response.GetResponseStream();
+                    StreamReader readStream = null;
+
+                    if (response.CharacterSet == null)
+                    {
+                        readStream = new StreamReader(receiveStream);
+                    }
+                    else
+                    {
+                        readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                    }
+
+                    data = readStream.ReadToEnd();
+
+                    response.Close();
+                    readStream.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Out.WriteLine( ex.Message );
+            }
+
+
+            DateTime after = DateTime.Now; TimeSpan ts = after.Subtract(before);
+            long dms = ts.Milliseconds;
+         //   Console.Out.Write(" " + dms + " ");
+            if ( data.Contains("pass") )
+            {
+                lastDetectStatus[i] = "pass";
+            }
+            else if ( data.Contains("fail") && data.Length < 200)//less than 200 incase their is a fail message inside errored page
+            {
+                lastDetectStatus[i] = "fail";
+            }
+            else
+            {
+                lastDetectStatus[i] = "error";
+            }
+
+        }//end get HTML
+
+      
         public CloudCoin fixCoin(CloudCoin brokeCoin)
         {
             returnCoin = brokeCoin;
@@ -208,42 +219,45 @@ namespace Foundation
             // For every guid, check to see if it is fractured
             for (int guid_id = 0; guid_id < 25; guid_id++)
             {
-               // Console.Out.WriteLine("Inspecting RAIDA guid " + guid_id);
-               // Console.Out.WriteLine("RAIDA" + guid_id + " past status is " + returnCoin.pastStatus[guid_id]);
                 if (returnCoin.pastStatus[guid_id] == "fail")
                 { // This guid has failed, get tickets 
-                  //  Console.Out.WriteLine("RAIDA" + guid_id + " failed authenticity and needs to be fixed.");
 
                     fixer = new FixitHelper(guid_id, returnCoin.ans);
 
                     trustedServerAns = new String[] { returnCoin.ans[fixer.currentTriad[0]], returnCoin.ans[fixer.currentTriad[1]], returnCoin.ans[fixer.currentTriad[2]] };
+                    corner = 1;
                     while (!fixer.finnished)
                     {
                         fix_result = "";
                         get_tickets(fixer.currentTriad, trustedServerAns, returnCoin.nn, returnCoin.sn, returnCoin.getDenomination());
-                        //Console.Out.WriteLine("T1 " + ticketStatus0 + ", T2 " + ticketStatus1 + ", T3 " + ticketStatus2);
                         // See if there are errors in the tickets                  
                         if (ticketStatus0 != "ticket" || ticketStatus1 != "ticket" || ticketStatus2 != "ticket")
                         {// No tickets, go to next triad corner 
-                            Console.Out.WriteLine("Get ticket commands failed for guid " + guid_id);
+                            //check for more fails. 
+                            if (ticketStatus0 == "fail") { returnCoin.pastStatus[fixer.currentTriad[0] ] = "fail";  }//end if t1 fail
+                            if (ticketStatus1 == "fail") { returnCoin.pastStatus[fixer.currentTriad[0]] = "fail"; }//end if t1 fail
+                            if (ticketStatus2 == "fail") { returnCoin.pastStatus[fixer.currentTriad[0]] = "fail"; }//end if t1 fail
+
                             corner++;
                             fixer.setCornerToCheck(corner);
                         }
                         else
                         {
-                            Console.Out.WriteLine("Three good tickets to fix AN " + guid_id);
                             // Has three good tickets   
                             fix_result = this.agent[guid_id].fix(fixer.currentTriad, ticket1, ticket2, ticket3, returnCoin.ans[guid_id]);
                             if (fix_result == "success")
                             {
-                                Console.Out.WriteLine("GUID fixed for guid " + guid_id + " fix_result = " + fix_result);
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.Out.WriteLine("Success for" + guid_id );
+                                Console.ForegroundColor = ConsoleColor.White;
                                 returnCoin.pastStatus[guid_id] = "pass";
                                 fixer.finnished = true;
+                                corner = 1;
                             }
                             else
                             { // command failed,  need to try another corner
-                                Console.Out.WriteLine("GUID FAILED. Need to try another corner for guid " + guid_id + " fix_result = " + fix_result);
                                 corner++;
+                              
                                 fixer.setCornerToCheck(corner);
                             }//end if else fix was successful
                         }//end if else one of the tickts has an error. 
@@ -261,13 +275,138 @@ namespace Foundation
             returnCoin.calcExpirationDate();
             returnCoin.grade();
             return returnCoin;
+
         }// end fix coin
 
 
-        public String[] get_tickets(int[] triad, String[] ans, int nn, int sn, int denomination)
+        public void get_tickets(int[] triad, String[] ans, int nn, int sn, int denomination)
         {
             string[] returnTicketsStatus = { "error", "error", "error" };
 
+
+            var t00 = Task.Factory.StartNew(() => getTicket(0, triad[0], nn, sn, ans[0], denomination));
+            var t01 = Task.Factory.StartNew(() => getTicket(1, triad[1], nn, sn, ans[1], denomination));
+            var t02 = Task.Factory.StartNew(() => getTicket(2, triad[2], nn, sn, ans[2], denomination));
+
+
+            var taskList = new List<Task> { t00, t01, t02 };
+            Task.WaitAll(taskList.ToArray(), milliSecondsToTimeOut);
+
+        }//end get_tickets
+
+
+
+        public void getTicket(int i, int raidaID, int nn, int sn, String an, int d)
+        {
+            string lastRequest  = "https://raida" + raidaID + ".cloudcoin.global/service/get_ticket?nn=" + nn + "&sn=" + sn + "&an=" + an + "&pan=" + an + "&denomination=" + d;
+          //  Console.Out.Write("Request: " + lastRequest);
+            string data = "";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(lastRequest);
+            // request.ContinueTimeout = readTimeout;
+            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11";
+            DateTime before = DateTime.Now;
+            try
+            {
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    Stream receiveStream = response.GetResponseStream();
+                    StreamReader readStream = null;
+
+                    if (response.CharacterSet == null)
+                    {
+                        readStream = new StreamReader(receiveStream);
+                    }
+                    else
+                    {
+                        readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                    }
+
+                    data = readStream.ReadToEnd();
+
+                    response.Close();
+                    readStream.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Out.WriteLine(ex.Message);
+            }
+           // Console.Out.WriteLine("The data is " + data);
+            if ( data.Contains("ticket"))
+            {
+                String[] KeyPairs = data.Split(',');
+                String message = KeyPairs[3];
+                int startTicket = ordinalIndexOf(message, "\"", 3) + 2;
+                int endTicket = ordinalIndexOf(message, "\"", 4) - startTicket;
+                string lastTicket = message.Substring(startTicket - 1, endTicket + 1);
+                string lastTicketStatus = "ticket";
+                Console.Out.WriteLine("Results: raida" + raidaID + " sn=" + sn + ", denomination=" + d + lastTicketStatus + " " + lastTicket);
+                switch (i)//Which ticket is this?
+                {
+                    case 0:
+                        ticketStatus0 = lastTicketStatus;
+                        ticket1 = lastTicket;
+                 
+                        break;
+                    case 1:
+                        ticketStatus1 = lastTicketStatus;
+                        ticket2 = lastTicket;
+                 
+                        break;
+                    case 2:
+                        ticketStatus2 = lastTicketStatus;
+                        ticket3 = lastTicket;
+  
+                        break;
+                }//end switch
+            }
+            else if (data.Contains("fail"))
+            {
+                switch (i)//Which ticket is this?
+                {
+                    case 0:
+                        ticketStatus0 = "fail";
+                        ticket1 = "fail";
+
+                        break;
+                    case 1:
+                        ticketStatus1 = "fail";
+                        ticket2 = "fail";
+
+                        break;
+                    case 2:
+                        ticketStatus2 = "fail";
+                        ticket3 = "fail";
+
+                        break;
+                }//end switch
+
+            }//end if
+
+          //  Console.Out.Write("Response" + data);
+        }//end get ticket
+
+
+
+        /**
+      * Method ordinalIndexOf used to parse cloudcoins. Finds the nth number of a character within a string
+      *
+      * @param str The string to search in
+      * @param substr What to count in the string
+      * @param n The nth number
+      * @return The index of the nth number
+      */
+        public int ordinalIndexOf(string str, string substr, int n)
+        {
+            int pos = str.IndexOf(substr);
+            while (--n > 0 && pos != -1)
+            {
+                pos = str.IndexOf(substr, (pos + 1));
+            }
+            return pos;
+        }//end ordinal Index of
+        /*
             working_nn = nn;
             working_sn = sn;
             working_ans = ans;
@@ -301,7 +440,7 @@ namespace Foundation
 
             return returnTicketsStatus;
         }//end detectCoin
-
+        */
 
         public void fixThread0()
         {

@@ -74,7 +74,7 @@ namespace Foundation
             if (incomeJson.Contains("fracked"))//If there is an fracked note that explains the status "fracked=ppppppppfppppppppppppppp"
             {
                 frackedCodes = incomeJson.Substring(incomeJson.IndexOf("fracked") + 10, 25);
-                Console.WriteLine(frackedCodes);
+               // Console.WriteLine(frackedCodes);
                 aoid_dictionary.Add("fracked", frackedCodes);
             }
 
@@ -386,6 +386,25 @@ namespace Foundation
             return alreadyExists;
 
         }//End Write To
+
+
+        public void overWrite(String folder, CloudCoin cc)
+        {
+            const string quote = "\"";
+            const string tab = "\t";
+            String wholeJson = "{" + Environment.NewLine; //{
+            String json = this.setJSON(cc);
+            
+                wholeJson += tab + quote + "cloudcoin" + quote + ": [" + Environment.NewLine; // "cloudcoin" : [
+                wholeJson += json;
+                wholeJson += "}";
+  
+            File.WriteAllText(folder + cc.fileName + ".stack", wholeJson);
+
+        }//End Overwrite
+
+
+
 
         private CloudCoin parseJpeg(String wholeString)
         {

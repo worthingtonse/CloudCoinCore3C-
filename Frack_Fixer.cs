@@ -39,7 +39,7 @@ namespace Foundation
             
             for ( int i = 0; i < frackedFileNames.Length; i++ )
             {
-                Console.WriteLine("UnFracking coin " + i +" of " + frackedFileNames.Length);
+                Console.WriteLine("UnFracking coin " + (i+1) +" of " + frackedFileNames.Length);
                 try
                 {
                     frackedCC = fileUtils.loadOneCloudCoinFromJsonFile( this.fileUtils.frackedFolder + frackedFileNames[i] );
@@ -56,18 +56,18 @@ namespace Foundation
                     {
                         case "bank":
                             this.totalValueToBank++;
-                            this.fileUtils.writeTo(this.fileUtils.bankFolder, fixedCC);
+                            this.fileUtils.overWrite(this.fileUtils.bankFolder, fixedCC);
                             this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[i]);
                             break;
                         case "counterfeit":
                             this.totalValueToCounterfeit++;
-                            this.fileUtils.writeTo(this.fileUtils.counterfeitFolder, fixedCC);
+                            this.fileUtils.overWrite(this.fileUtils.counterfeitFolder, fixedCC);
                             this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[i]);
                             break;
                         default://Move back to fracked folder
                             this.totalValueToFractured++;
                             this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[i]);
-                            this.fileUtils.writeTo(this.fileUtils.frackedFolder, fixedCC);
+                            this.fileUtils.overWrite(this.fileUtils.frackedFolder, fixedCC);
                             break;
                     }
                     // end switch on the place the coin will go 

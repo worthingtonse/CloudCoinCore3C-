@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Foundation
 {
@@ -172,6 +173,8 @@ namespace Foundation
         }   // end import
 
         public static void detect() {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             Console.Out.WriteLine("");
             Console.Out.WriteLine("Detecting Authentication of Suspect Coins");
             Detector detector = new Detector(fileUtils, timeout);
@@ -180,6 +183,8 @@ namespace Foundation
             // And the bank and the fractured for total
             Console.Out.WriteLine(("Total Counterfeit: " + detectionResults[1]));
             showCoins();
+            stopwatch.Stop();
+            Console.Out.WriteLine( stopwatch.Elapsed + " ms");
         }//end detect
 
         public static void export()
@@ -258,10 +263,14 @@ namespace Foundation
 
 
         public static void fix() {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             Console.Out.WriteLine("");
             Console.Out.WriteLine("Attempting attempt to fix all fracked coins.");
             Frack_Fixer fixer = new Frack_Fixer(fileUtils, timeout);
             fixer.fixAll();
+            stopwatch.Stop();
+            Console.Out.WriteLine("Fix Time: " + stopwatch.Elapsed + " ms");
         }//end fix
 
 
