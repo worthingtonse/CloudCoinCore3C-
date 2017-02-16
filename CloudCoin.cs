@@ -474,11 +474,9 @@ namespace Foundation
             // Used only for console apps
             //  System.out.println("Finished detecting coin index " + j);
             // PRINT OUT ALL COIN'S RAIDA STATUS AND SET AN TO NEW PAN
+
+
             Console.Out.WriteLine("");
-            Console.Out.WriteLine("Authenticity Detection Report for: SN #" + this.sn + ", Denomination: " + this.getDenomination());
-
-
-
             Console.ForegroundColor = ConsoleColor.White;
             Console.Out.WriteLine("╔══════════════════════════════════════════════════════╗");
             Console.Out.WriteLine("║  Authenticity Report SN #" + string.Format("{0,8}", this.sn) + ", Denomination: " + string.Format("{0,3}", this.getDenomination()) + " ║");
@@ -493,6 +491,7 @@ namespace Foundation
             Console.Out.WriteLine("╠══════════╬══════════╬══════════╬══════════╬══════════╣");
             Console.Out.Write("║    "); a(pastStatus[20]); Console.Out.Write("     ║    "); a(pastStatus[21]);  Console.Out.Write("     ║    "); a(pastStatus[22]); Console.Out.Write("     ║    "); a(pastStatus[23]); Console.Out.Write("     ║    "); a(pastStatus[24]); Console.Out.WriteLine("     ║");
             Console.Out.WriteLine("╚══════════╩══════════╩══════════╩══════════╩══════════╝");
+            Console.Out.WriteLine("");
             Console.ForegroundColor = ConsoleColor.White;
 
                 // check if failed
@@ -517,8 +516,13 @@ namespace Foundation
         public void a(string pastStatus) {
             if (pastStatus == "pass") {
                 Console.ForegroundColor = Console.ForegroundColor = ConsoleColor.Green; Console.Out.Write("♥"); Console.ForegroundColor = ConsoleColor.White;
-            } else {
+            } else if (pastStatus == "fail")
+            {
                 Console.ForegroundColor = ConsoleColor.Red; Console.Out.Write("█"); Console.ForegroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow; Console.Out.Write("U"); Console.ForegroundColor = ConsoleColor.White;
             }
         }//end a Report helper
     }

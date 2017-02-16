@@ -176,7 +176,7 @@ namespace Foundation
             Console.Out.WriteLine("Detecting Authentication of Suspect Coins");
             Detector detector = new Detector(fileUtils, timeout);
             int[] detectionResults = detector.detectAll();
-            Console.Out.WriteLine(("Total Received in bank: " + (detectionResults[0] + detectionResults[2])));
+            Console.Out.WriteLine(("Total imported to bank: " + (detectionResults[0] + detectionResults[2])));
             // And the bank and the fractured for total
             Console.Out.WriteLine(("Total Counterfeit: " + detectionResults[1]));
             showCoins();
@@ -190,12 +190,7 @@ namespace Foundation
             int[] frackedTotals = bank.countCoins(frackedFolder);
             Console.Out.WriteLine("Your Bank Inventory:");
             int grandTotal = (bankTotals[0] + frackedTotals[0]);
-            Console.Out.WriteLine("Total: " + grandTotal);
-            Console.Out.WriteLine("  1s: "+ (bankTotals[1] + frackedTotals[1]));
-            Console.Out.WriteLine("  5s: "+ (bankTotals[2] + frackedTotals[2]));
-            Console.Out.WriteLine(" 25s: "+ (bankTotals[3] + frackedTotals[3]));
-            Console.Out.WriteLine("100s: "+ (bankTotals[4] + frackedTotals[4])) ;
-            Console.Out.WriteLine("250s: " + (bankTotals[5] + frackedTotals[5]));
+            showCoins();
             // state how many 1, 5, 25, 100 and 250
             int exp_1 = 0;
             int exp_5 = 0;
@@ -242,9 +237,9 @@ namespace Foundation
             // if 1s not zero 
             // move to export
             Exporter exporter = new Exporter(fileUtils);
-            Console.Out.WriteLine("What tag will you add to the file?");
+            Console.Out.WriteLine("What tag will you add to the file name?");
             String tag = reader.readString(false);
-            Console.Out.WriteLine(("Exporting to:" + exportFolder));
+            //Console.Out.WriteLine(("Exporting to:" + exportFolder));
             if (file_type == 1)
             {
                 exporter.writeJPEGFiles(exp_1, exp_5, exp_25, exp_100, exp_250, tag);
@@ -258,6 +253,9 @@ namespace Foundation
             // end if type jpge or stack
             Console.Out.WriteLine("Exporting CloudCoins Completed.");
         }// end export One
+
+
+
 
         public static void fix() {
             Console.Out.WriteLine("");

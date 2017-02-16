@@ -291,11 +291,11 @@ namespace Foundation
             /*Add Saying*/
             json = json.Replace("[]", @"""Join the Cloud People""");
             File.WriteAllText(filename, json);
-
+            Console.Out.WriteLine("Writing to " + filename);
             /*DELETE FILES THAT HAVE BEEN EXPORTED*/
             for (int cc = 0; cc < coinsToDelete.Length; cc++)
             {
-                Console.Out.WriteLine("Deleting " + coinsToDelete[cc]);
+               // Console.Out.WriteLine("Deleting " + coinsToDelete[cc]);
                 if (coinsToDelete[cc] != null) { File.Delete(coinsToDelete[cc]); }
             }//end for all coins to delete
 
@@ -312,7 +312,7 @@ namespace Foundation
                 CloudCoin jpgCoin = this.fileUtils.loadOneCloudCoinFromJsonFile(bankFileName);
                 if (this.fileUtils.writeJpeg(jpgCoin, tag))//If the jpeg writes successfully 
                 {
-                   // File.Delete(bankFileName);//Delete the files if they have been written to
+                   File.Delete(bankFileName);//Delete the files if they have been written to
                 }//end if write was good. 
             }
             else//Export a fracked coin. 
@@ -320,7 +320,7 @@ namespace Foundation
                 CloudCoin jpgCoin = fileUtils.loadOneCloudCoinFromJsonFile(frackedFileName);
                 if (this.fileUtils.writeJpeg(jpgCoin, tag))
                 {
-                  //  File.Delete(frackedFileName);//Delete the files if they have been written to
+                  File.Delete(frackedFileName);//Delete the files if they have been written to
                 }//end if
             }//end else
         }//End write one jpeg 

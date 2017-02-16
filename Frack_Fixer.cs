@@ -30,9 +30,16 @@ namespace Foundation
             int[] results = new int[3];
             String[] frackedFileNames = new DirectoryInfo(this.fileUtils.frackedFolder ).GetFiles().Select(o => o.Name).ToArray();
             CloudCoin frackedCC;
-           // Console.WriteLine("UnFracking coin 1 of " + frackedFileNames.Length);
+            if ( frackedFileNames.Length < 0) {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Out.WriteLine("You have no fracked coins.");
+                Console.ForegroundColor = ConsoleColor.White;
+            }//no coins to unfrack
+
+            
             for ( int i = 0; i < frackedFileNames.Length; i++ )
             {
+                Console.WriteLine("UnFracking coin " + i +" of " + frackedFileNames.Length);
                 try
                 {
                     frackedCC = fileUtils.loadOneCloudCoinFromJsonFile( this.fileUtils.frackedFolder + frackedFileNames[i] );
@@ -68,11 +75,15 @@ namespace Foundation
                 }
                 catch (FileNotFoundException ex)
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(ex);
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
                 catch (IOException ioex)
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(ioex);
+                    Console.ForegroundColor = ConsoleColor.White;
                 } // end try catch
             }// end for each file name that is fracked
 

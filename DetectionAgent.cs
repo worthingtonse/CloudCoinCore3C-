@@ -201,21 +201,19 @@ namespace Foundation
             int f2 = triad[1];
             int f3 = triad[2];
             this.lastRequest = fullUrl + "fix?fromserver1=" + f1 + "&message1=" + m1 + "&fromserver2=" + f2 + "&message2=" + m2 + "&fromserver3=" + f3 + "&message3=" + m3 + "&pan=" + pan;
-            //System.out.println(this.lastRequest);
+          // Console.Out.WriteLine(this.lastRequest);
 
             try
             {
                 DateTime before = DateTime.Now;
 
                 this.lastResponse = getHtml(this.lastRequest);
-
+             //   Console.Out.WriteLine(this.lastResponse);
                 DateTime after = DateTime.Now; TimeSpan ts = after.Subtract(before);
                 this.dms = ts.Milliseconds;
-                // System.out.println(this.lastResponse + " " + this.dms );
             }
             catch (Exception ex)
             {//quit
-             //  System.out.println(ex + " " +this.lastResponse);
                 return "error";
             }
 
@@ -238,6 +236,7 @@ namespace Foundation
          */
         private String getHtml(String urlAddress)
         {
+            Console.Out.Write(".");
             string data = "";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
             request.ContinueTimeout = 2000;

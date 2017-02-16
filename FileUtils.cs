@@ -277,7 +277,7 @@ namespace Foundation
         /* Writes a JPEG To the Export Folder */
         public bool writeJpeg(CloudCoin cc, string tag)
         {
-            Console.Out.WriteLine("Writing jpeg " + cc.sn);
+           // Console.Out.WriteLine("Writing jpeg " + cc.sn);
   
             bool fileSavedSuccessfully = true;
 
@@ -342,21 +342,9 @@ namespace Foundation
             b1.InsertRange( 4, b2);
             
 
-
-           // bitmapimage.Save(fileName, ImageFormat.Jpeg);
-           // bitmapimage.Dispose();
-           
-            //Merg bytes together
-
-            /* OVERWRITE THE BYTES IN THE JPEG WITH THE COIN BYTES*/
-           // for (int j = 0; j < ccArray.Length; j++)
-           // {
-           //     jpegBytes[offset + j] = ccArray[j];
-           // }
-
             string fileName = exportFolder + cc.fileName + tag + ".jpg";
             File.WriteAllBytes(fileName, b1.ToArray());
-
+            Console.Out.WriteLine("Writing to " + fileName);
             return fileSavedSuccessfully;
         }//end write JPEG
 
@@ -426,7 +414,7 @@ namespace Foundation
                 cc.pastStatus[i] = "undetected";
             }
             cc.fileName = cc.getDenomination() + ".CloudCoin." + cc.nn + "." + cc.sn + ".";
-            Console.Out.WriteLine("parseJpeg cc.fileName " + cc.fileName);
+          //  Console.Out.WriteLine("parseJpeg cc.fileName " + cc.fileName);
             // end for each pan
             return cc;
         }// end parse Jpeg
