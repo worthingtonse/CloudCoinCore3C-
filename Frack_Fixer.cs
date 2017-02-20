@@ -46,8 +46,11 @@ namespace Foundation
                  //   Console.WriteLine( "UnFracking SN " + frackedCC.sn + ", Denomination: " + frackedCC.getDenomination() );
 
                   String value = frackedCC.aoid["fracked"];
-                  // Console.WriteLine("Fracked value is of the frackedCC is in frack_fixer " + value);
-                  //  Console.WriteLine("pastestatus for one " + frackedCC.pastStatus[0]);
+                  Console.WriteLine("Fracked Coin: ");
+                    frackedCC.consoleReport();
+                    //  Console.WriteLine("pastestatus for [0] " + frackedCC.pastStatus[0]);
+                    ///   Console.WriteLine("pastestatus for [1] " + frackedCC.pastStatus[1]);
+                    //  Console.WriteLine("pastestatus for [2] " + frackedCC.pastStatus[2]);
 
                     CloudCoin fixedCC = this.raida.fixCoin( frackedCC ); // Will attempt to unfrack the coin. 
                     

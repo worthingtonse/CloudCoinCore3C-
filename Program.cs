@@ -24,7 +24,7 @@ namespace Foundation
         public static String prompt = "Start Mode> ";
         public static String[] commandsAvailable = new String[] { "show coins", "import", "detect", "export", "show folders", "fix fracked", "quit" };
         //public static String[] commandsAvailable = new String[] { "import", "show coins", "export", "fix fracked", "quit", "show folders", "test echo", "test detect", "test get_ticket", "test hints", "test fix", };
-        public static int timeout = 2000; // Milliseconds to wait until the request is ended. 
+        public static int timeout = 10000; // Milliseconds to wait until the request is ended. 
         public static FileUtils fileUtils = new FileUtils(rootFolder, importFolder, importedFolder, trashFolder, suspectFolder, frackedFolder, bankFolder, templateFolder, counterfeitFolder, directoryFolder, exportFolder);
         public static Random myRandom = new Random();
 

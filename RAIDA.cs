@@ -207,8 +207,8 @@ namespace Foundation
       
         public CloudCoin fixCoin(CloudCoin brokeCoin)
         {
-            returnCoin = brokeCoin;
-            returnCoin.setAnsToPans();// Make sure we set the RAIDA to the cc ans and not new pans. 
+
+            brokeCoin.setAnsToPans();// Make sure we set the RAIDA to the cc ans and not new pans. 
             DateTime before = DateTime.Now;
 
             String fix_result = "";
@@ -219,24 +219,25 @@ namespace Foundation
             // For every guid, check to see if it is fractured
             for (int guid_id = 0; guid_id < 25; guid_id++)
             {
-                if (returnCoin.pastStatus[guid_id] == "fail")
+                Console.WriteLine("Paste Status for " + guid_id + ", " + brokeCoin.pastStatus[guid_id]);
+                if (brokeCoin.pastStatus[guid_id] == "fail")
                 { // This guid has failed, get tickets 
 
-                    fixer = new FixitHelper(guid_id, returnCoin.ans);
+                    fixer = new FixitHelper(guid_id, brokeCoin.ans);
 
-                    trustedServerAns = new String[] { returnCoin.ans[fixer.currentTriad[0]], returnCoin.ans[fixer.currentTriad[1]], returnCoin.ans[fixer.currentTriad[2]] };
+                    trustedServerAns = new String[] { brokeCoin.ans[fixer.currentTriad[0]], brokeCoin.ans[fixer.currentTriad[1]], brokeCoin.ans[fixer.currentTriad[2]] };
                     corner = 1;
                     while (!fixer.finnished)
                     {
                         fix_result = "";
-                        get_tickets(fixer.currentTriad, trustedServerAns, returnCoin.nn, returnCoin.sn, returnCoin.getDenomination());
+                        get_tickets(fixer.currentTriad, trustedServerAns, brokeCoin.nn, brokeCoin.sn, brokeCoin.getDenomination());
                         // See if there are errors in the tickets                  
                         if (ticketStatus0 != "ticket" || ticketStatus1 != "ticket" || ticketStatus2 != "ticket")
                         {// No tickets, go to next triad corner 
                             //check for more fails. 
-                            if (ticketStatus0 == "fail") { returnCoin.pastStatus[fixer.currentTriad[0] ] = "fail";  }//end if t1 fail
-                            if (ticketStatus1 == "fail") { returnCoin.pastStatus[fixer.currentTriad[0]] = "fail"; }//end if t1 fail
-                            if (ticketStatus2 == "fail") { returnCoin.pastStatus[fixer.currentTriad[0]] = "fail"; }//end if t1 fail
+                            if (ticketStatus0 == "fail") { brokeCoin.pastStatus[ fixer.currentTriad[0] ] = "fail";  }//end if t0 fail
+                            if (ticketStatus1 == "fail") { brokeCoin.pastStatus[ fixer.currentTriad[1] ] = "fail"; }//end if t1 fail
+                            if (ticketStatus2 == "fail") { brokeCoin.pastStatus[ fixer.currentTriad[2] ] = "fail"; }//end if t2 fail
 
                             corner++;
                             fixer.setCornerToCheck(corner);
@@ -244,13 +245,13 @@ namespace Foundation
                         else
                         {
                             // Has three good tickets   
-                            fix_result = this.agent[guid_id].fix(fixer.currentTriad, ticket1, ticket2, ticket3, returnCoin.ans[guid_id]);
+                            fix_result = this.agent[guid_id].fix(fixer.currentTriad, ticket1, ticket2, ticket3, brokeCoin.ans[guid_id]);
                             if (fix_result == "success")
                             {
                                 Console.ForegroundColor = ConsoleColor.Green;
-                                Console.Out.WriteLine("Success for" + guid_id );
+                                Console.Out.WriteLine("Success for " + guid_id );
                                 Console.ForegroundColor = ConsoleColor.White;
-                                returnCoin.pastStatus[guid_id] = "pass";
+                                brokeCoin.pastStatus[guid_id] = "pass";
                                 fixer.finnished = true;
                                 corner = 1;
                             }
@@ -269,12 +270,12 @@ namespace Foundation
             TimeSpan ts = after.Subtract(before);
             Console.WriteLine("It took this many ms to fix the guid: " + ts.Milliseconds);
 
-            returnCoin.calculateHP();//how many fails did it get
-            returnCoin.gradeCoin();
+            brokeCoin.calculateHP();//how many fails did it get
+            brokeCoin.gradeCoin();
             // sets the grade and figures out what the file extension should be (bank, fracked, counterfeit, lost
-            returnCoin.calcExpirationDate();
-            returnCoin.grade();
-            return returnCoin;
+            brokeCoin.calcExpirationDate();
+            brokeCoin.grade();
+            return brokeCoin;
 
         }// end fix coin
 
@@ -283,15 +284,22 @@ namespace Foundation
         {
             string[] returnTicketsStatus = { "error", "error", "error" };
 
-
+            /*
+            Console.WriteLine("Requesting tickets from RAIDA " + triad[0] +", "+ triad[1] + " and " + triad[2]);
             var t00 = Task.Factory.StartNew(() => getTicket(0, triad[0], nn, sn, ans[0], denomination));
             var t01 = Task.Factory.StartNew(() => getTicket(1, triad[1], nn, sn, ans[1], denomination));
             var t02 = Task.Factory.StartNew(() => getTicket(2, triad[2], nn, sn, ans[2], denomination));
 
-
+            Console.Out.WriteLine("Start waiting " + triad[0] +", " +triad[1] + " and " +triad[2] );
             var taskList = new List<Task> { t00, t01, t02 };
-            Task.WaitAll(taskList.ToArray(), milliSecondsToTimeOut);
-
+            Task.WaitAll(taskList.ToArray(), 10000);
+            Console.Out.WriteLine("Done waiting " + triad[0] + ", " + triad[1] + " and " + triad[2]);
+            */
+            Console.Out.WriteLine("Getting tickets from RAIDA " + triad[0] + ", " + triad[1] + " and " + triad[2]);
+            getTicket(0, triad[0], nn, sn, ans[0], denomination);
+            getTicket(1, triad[1], nn, sn, ans[1], denomination);
+            getTicket(2, triad[2], nn, sn, ans[2], denomination);
+            Console.Out.WriteLine("Tickets complete for RAIDA " + triad[0] + ", " + triad[1] + " and " + triad[2]);
         }//end get_tickets
 
 
@@ -341,7 +349,7 @@ namespace Foundation
                 int endTicket = ordinalIndexOf(message, "\"", 4) - startTicket;
                 string lastTicket = message.Substring(startTicket - 1, endTicket + 1);
                 string lastTicketStatus = "ticket";
-                Console.Out.WriteLine("Results: raida" + raidaID + " sn=" + sn + ", denomination=" + d + lastTicketStatus + " " + lastTicket);
+                Console.Out.WriteLine("Raida" + raidaID +": " + lastTicket);
                 switch (i)//Which ticket is this?
                 {
                     case 0:

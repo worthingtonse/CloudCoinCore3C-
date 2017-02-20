@@ -54,7 +54,7 @@ namespace Foundation
                         default: this.pastStatus[i] = "undetected"; break;
                     }//end switch on past status
                 }//end if has fracked aoid key
-               // Console.WriteLine("CloudCoin past status is  " + pastStatus[i]);
+               //Console.WriteLine("CloudCoin past status is  " + pastStatus[i]);
             } // end for each pan
               //  String value = aoid["fracked"];
               //  Console.WriteLine("Fracked value in the coin constructor in CLoudCOin  is " + value);

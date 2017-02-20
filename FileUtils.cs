@@ -76,6 +76,8 @@ namespace Foundation
                 frackedCodes = incomeJson.Substring(incomeJson.IndexOf("fracked") + 10, 25);
                // Console.WriteLine(frackedCodes);
                 aoid_dictionary.Add("fracked", frackedCodes);
+
+
             }
 
             CloudCoin returnCC = new CloudCoin(nn, sn, ans, ed, aoid_dictionary, "suspect");
