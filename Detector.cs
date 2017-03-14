@@ -22,6 +22,10 @@ namespace Foundation
 
 
         /*  PUBLIC METHODS */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public int[] detectAll()
         {
             // LOAD THE .suspect COINS ONE AT A TIME AND TEST THEM

@@ -246,8 +246,6 @@ namespace Foundation
                         json += ",\n";
                     }
 
-                    coinsToDelete[c] = bankedFileNames[i];
-                    c++;
                     if (File.Exists(bankFileName))
                     {
                         CloudCoin coinNote = this.fileUtils.loadOneCloudCoinFromJsonFile(bankFileName);
@@ -289,7 +287,7 @@ namespace Foundation
 
             // end if file exists
             /*Add Saying*/
-            json = json.Replace("[]", @"""Join the Cloud People""");
+            json = json.Replace("[]", @"""We The Cloud People""");
             File.WriteAllText(filename, json);
             Console.Out.WriteLine("Writing to " + filename);
             /*DELETE FILES THAT HAVE BEEN EXPORTED*/
@@ -307,7 +305,7 @@ namespace Foundation
         /* PRIVATE METHODS */
         private void jpegWriteOne(String path, String tag, String bankFileName, String frackedFileName)
         {
-            if (File.Exists(bankFileName))//If the file is a bank file, export a good bank coind
+            if (File.Exists(bankFileName))//If the file is a bank file, export a good bank coin
             {
                 CloudCoin jpgCoin = this.fileUtils.loadOneCloudCoinFromJsonFile(bankFileName);
                 if (this.fileUtils.writeJpeg(jpgCoin, tag))//If the jpeg writes successfully 

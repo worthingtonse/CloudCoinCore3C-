@@ -20,9 +20,8 @@ namespace Foundation
         {
             String[] fnames = new DirectoryInfo(this.fileUtils.importFolder).GetFiles().Select(o => o.Name).ToArray();//Get a list of all in the folder except the directory "imported"
   
-            if (fnames.Length == 0)
+            if (fnames.Length == 0)//   Console.Out.WriteLine("There were no CloudCoins to import. Please place our CloudCoin .jpg and .stack files in your imports" + " folder at " + this.fileUtils.importFolder );
             {
-             //   Console.Out.WriteLine("There were no CloudCoins to import. Please place our CloudCoin .jpg and .stack files in your imports" + " folder at " + this.fileUtils.importFolder );
                 return false;
             }
             else
@@ -56,6 +55,17 @@ namespace Foundation
             if (extension == "jpeg" || extension == "jpg")//Run if file is a jpeg
             {
                 if (!this.importJPEG(fname))
+                {
+                    if (!File.Exists(this.fileUtils.trashFolder + fname))
+                    {
+                        File.Move(this.fileUtils.importFolder + fname, this.fileUtils.trashFolder + fname);
+                    }
+                    return false;//"Failed to load JPEG file");
+                }//end if import fails
+            }//end if jpeg
+            else if (extension == "chest" || extension == ".chest")//Run if file is a jpeg
+            {
+                if (!this.importChest(fname))
                 {
                     if (!File.Exists(this.fileUtils.trashFolder + fname))
                     {
@@ -160,7 +170,36 @@ namespace Foundation
 
             // end try catch
             return isSuccessful;
-        }
+        }//import stack
+
+
+        private bool importChest(String fileName)
+        {
+            bool isSuccessful = false;
+            //  System.out.println("Trying to load: " + importFolder + fileName );
+            try
+            {
+                CloudCoin[] tempCoin = this.fileUtils.loadManyCloudCoinFromJsonFile(this.fileUtils.importFolder + fileName);
+
+                for (int i = 0; i < tempCoin.Length; i++)
+                {
+                    this.fileUtils.writeTo(this.fileUtils.bankFolder, tempCoin[i]);
+                }//end for each temp Coin
+                return true;
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.Out.WriteLine("File not found: " + fileName + ex);
+            }
+            catch (IOException ioex)
+            {
+                Console.Out.WriteLine("IO Exception:" + fileName + ioex);
+            }
+
+            // end try catch
+            return isSuccessful;
+        }//import stack
+
 
         public string bytesToHexString(byte[] data)
         {

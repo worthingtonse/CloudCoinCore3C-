@@ -10,19 +10,19 @@ namespace Foundation
         /* INSTANCE VARIABLES */
         public static KeyboardReader reader = new KeyboardReader();
         //  public static String rootFolder = System.getProperty("user.dir") + File.separator +"bank" + File.separator ;
-        public static String rootFolder = ("C:\\CloudCoins" + Path.DirectorySeparatorChar);
-        public static String importFolder = (rootFolder + "Import" + Path.DirectorySeparatorChar);
-        public static String importedFolder = (rootFolder + "Imported" + Path.DirectorySeparatorChar);
-        public static String trashFolder = (rootFolder + "Trash" + Path.DirectorySeparatorChar);
-        public static String suspectFolder = (rootFolder + "Suspect" + Path.DirectorySeparatorChar);
-        public static String frackedFolder = (rootFolder + "Fracked" + Path.DirectorySeparatorChar);
-        public static String bankFolder = (rootFolder + "Bank" + Path.DirectorySeparatorChar);
-        public static String templateFolder = (rootFolder + "Templates" + Path.DirectorySeparatorChar);
-        public static String counterfeitFolder = (rootFolder + "Counterfeit" + Path.DirectorySeparatorChar);
-        public static String directoryFolder = (rootFolder + "Directory" + Path.DirectorySeparatorChar);
-        public static String exportFolder = (rootFolder + "Export" + Path.DirectorySeparatorChar);
+        public static String rootFolder = AppDomain.CurrentDomain.BaseDirectory;
+        public static String importFolder = rootFolder + "Import" + Path.DirectorySeparatorChar;
+        public static String importedFolder = rootFolder + "Imported" + Path.DirectorySeparatorChar;
+        public static String trashFolder = rootFolder + "Trash" + Path.DirectorySeparatorChar;
+        public static String suspectFolder = rootFolder + "Suspect" + Path.DirectorySeparatorChar;
+        public static String frackedFolder = rootFolder + "Fracked" + Path.DirectorySeparatorChar;
+        public static String bankFolder = rootFolder + "Bank" + Path.DirectorySeparatorChar;
+        public static String templateFolder = rootFolder + "Templates" + Path.DirectorySeparatorChar;
+        public static String counterfeitFolder = rootFolder + "Counterfeit" + Path.DirectorySeparatorChar;
+        public static String directoryFolder = rootFolder + "Directory" + Path.DirectorySeparatorChar;
+        public static String exportFolder = rootFolder + "Export" + Path.DirectorySeparatorChar;
         public static String prompt = "Start Mode> ";
-        public static String[] commandsAvailable = new String[] { "show coins", "import", "detect", "export", "show folders", "fix fracked", "quit" };
+        public static String[] commandsAvailable = new String[] { "show coins", "import", "export", "fix fracked", "show folders", "dump", "quit" };
         //public static String[] commandsAvailable = new String[] { "import", "show coins", "export", "fix fracked", "quit", "show folders", "test echo", "test detect", "test get_ticket", "test hints", "test fix", };
         public static int timeout = 10000; // Milliseconds to wait until the request is ended. 
         public static FileUtils fileUtils = new FileUtils(rootFolder, importFolder, importedFolder, trashFolder, suspectFolder, frackedFolder, bankFolder, templateFolder, counterfeitFolder, directoryFolder, exportFolder);
@@ -78,6 +78,9 @@ namespace Foundation
                     case "show folders":
                         showFolders();
                         break;
+                    case "dump":
+                        dump();
+                        break;
                     case "quit":
                         Console.Out.WriteLine("Goodbye!");
                         Environment.Exit(0);
@@ -94,7 +97,8 @@ namespace Foundation
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Out.WriteLine("╔══════════════════════════════════════════════════════════════════╗");
-            Console.Out.WriteLine("║                      CloudCoin Console Bank                      ║");
+            Console.Out.WriteLine("║                   CloudCoin Foundation v.3.13.17                 ║");
+            Console.Out.WriteLine("║          Used to Authenticate, Store and Payout CloudCoins       ║");
             Console.Out.WriteLine("║      This Software is provided as is with all faults, defects    ║");
             Console.Out.WriteLine("║          and errors, and without warranty of any kind.           ║");
             Console.Out.WriteLine("║                Free from the CloudCoin Consortium.               ║");
@@ -115,7 +119,7 @@ namespace Foundation
              //Output  " 12.3"
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Out.WriteLine("╔═════════════════════════════════════════════════════════════════╗");
-            Console.Out.WriteLine("║  Total Coins in Bank:    " + string.Format("{0,8}", (bankTotals[0] + frackedTotals[0])) + "                               ║");
+            Console.Out.WriteLine("║  Total Coins in Bank:    " + string.Format("{0,8:N0}", (bankTotals[0] + frackedTotals[0])) + "                               ║");
             Console.Out.WriteLine("╠══════════╦══════════╦══════════╦══════════╦══════════╦══════════╣");
             Console.Out.WriteLine("║          ║    1s    ║    5s    ║    25s   ║   100s   ║   250s   ║");
             Console.Out.WriteLine("╠══════════╬══════════╬══════════╬══════════╬══════════╬══════════╣");
@@ -130,17 +134,17 @@ namespace Foundation
 
         public static void showFolders()
         {
-            Console.Out.WriteLine("Your Root folder is " + rootFolder);
-            Console.Out.WriteLine("Your Import folder is " + importFolder);
-            Console.Out.WriteLine("Your Imported folder is " + importedFolder);
-            Console.Out.WriteLine("Your Suspect folder is " + suspectFolder);
-            Console.Out.WriteLine("Your Trash folder is " + trashFolder);
-            Console.Out.WriteLine("Your Bank folder is " + bankFolder);
-            Console.Out.WriteLine("Your Fracked folder is " + frackedFolder);
-            Console.Out.WriteLine("Your Templates folder is " + templateFolder);
-            Console.Out.WriteLine("Your Directory folder is " + directoryFolder);
-            Console.Out.WriteLine("Your Counterfeits folder is " + counterfeitFolder);
-            Console.Out.WriteLine("Your Export folder is " + exportFolder);
+            Console.Out.WriteLine("Your Root folder is: \n " + rootFolder);
+            Console.Out.WriteLine("Your Import folder is: \n  " + importFolder);
+            Console.Out.WriteLine("Your Imported folder is: \n  " + importedFolder);
+            Console.Out.WriteLine("Your Suspect folder is: \n  " + suspectFolder);
+            Console.Out.WriteLine("Your Trash folder is: \n  " + trashFolder);
+            Console.Out.WriteLine("Your Bank folder is: \n  " + bankFolder);
+            Console.Out.WriteLine("Your Fracked folder is: \n  " + frackedFolder);
+            Console.Out.WriteLine("Your Templates folder is: \n  " + templateFolder);
+            Console.Out.WriteLine("Your Directory folder is: \n  " + directoryFolder);
+            Console.Out.WriteLine("Your Counterfeits folder is: \n  " + counterfeitFolder);
+            Console.Out.WriteLine("Your Export folder is: \n      " + exportFolder);
         } // end show folders
 
 
@@ -168,7 +172,38 @@ namespace Foundation
             }
             else
             {
-                //detect();
+                detect();
+            }//end if coins to import
+        }   // end import
+
+
+        public static void importChest()
+        {
+            Console.Out.WriteLine("What is the path to your chest file?");
+            string path = reader.readString(false);
+            Console.Out.WriteLine("");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Out.WriteLine("Loading all CloudCoins in your import folder: " + importFolder);
+            Console.ForegroundColor = ConsoleColor.White;
+            Importer importer = new Importer(fileUtils);
+            if (!importer.importAll())//Moves all CloudCoins from the Import folder into the Suspect folder. 
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Out.WriteLine("No coins in import folder.");
+                Console.ForegroundColor = ConsoleColor.White;
+                //CHECK TO SEE IF THERE ARE UN DETECTED COINS IN THE SUSPECT FOLDER
+                String[] suspectFileNames = new DirectoryInfo(suspectFolder).GetFiles().Select(o => o.Name).ToArray();//Get all files in suspect folder
+                if (suspectFileNames.Length > 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Out.WriteLine("Finishing importing coins from last time...");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    detect();
+                } //end if there are files in the suspect folder that need to be imported
+            }
+            else
+            {
+                detect();
             }//end if coins to import
         }   // end import
 
@@ -185,6 +220,25 @@ namespace Foundation
             showCoins();
             stopwatch.Stop();
             Console.Out.WriteLine( stopwatch.Elapsed + " ms");
+        }//end detect
+
+        public static void dump()
+        {
+            Console.Out.WriteLine("");
+            Console.Out.WriteLine("Dumping will export your entire bank into your export folder in the form of stack files.");
+            Console.Out.WriteLine("Each file will recieve a random tag. This function is to help you sell CloudCoins on automated sales points.");
+            Console.Out.WriteLine("Continue to dump? Yes or No?");
+            string[] answers = new string[2] { "yes", "no" };
+            string okToDump = reader.readString(answers);
+            if ( okToDump.ToLower() == "yes")
+            {
+                Dumper dumper = new Dumper(fileUtils);
+                dumper.dumpAll();
+                Console.Out.WriteLine("Dump complete. Check your export folder");
+                // And the bank and the fractured for total
+                showCoins();
+            }
+          
         }//end detect
 
         public static void export()

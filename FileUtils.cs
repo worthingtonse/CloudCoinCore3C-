@@ -342,7 +342,12 @@ namespace Foundation
             List<byte> b1 = new List<byte>(snBytes);
             List<byte> b2 = new List<byte>(ccArray);
             b1.InsertRange( 4, b2);
-            
+
+            if (tag == "random") {
+                Random r = new Random();
+                int rInt = r.Next(100000, 1000000); //for ints
+                tag = rInt.ToString();
+            }
 
             string fileName = exportFolder + cc.fileName + tag + ".jpg";
             File.WriteAllBytes(fileName, b1.ToArray());
