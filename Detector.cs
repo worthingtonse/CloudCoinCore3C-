@@ -40,9 +40,18 @@ namespace Foundation
             {
                 try
                 {
-                    
+                    if (File.Exists(this.fileUtils.bankFolder + suspectFileNames[j]))
+                    {//Coin has already been imported. Delete it from import folder move to trash.
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Out.WriteLine("You tried to import a coin that has already been imported.");
+                        File.Delete(this.fileUtils.bankFolder + suspectFileNames[j] );
+                        Console.Out.WriteLine("Suspect CloudCoin was deleted.");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }else
+                    {
+
                     newCC = this.fileUtils.loadOneCloudCoinFromJsonFile(this.fileUtils.suspectFolder + suspectFileNames[j]);
-                    Console.Out.WriteLine("Now scanning coin " + j + " of " + suspectFileNames.Length + " for counterfeit. SN " + string.Format("{0:n0}", newCC.sn) + ", Denomination: " + newCC.getDenomination());
+                    Console.Out.WriteLine("Now scanning coin " + (j+1) + " of " + suspectFileNames.Length + " for counterfeit. SN " + string.Format("{0:n0}", newCC.sn) + ", Denomination: " + newCC.getDenomination());
                     Console.Out.WriteLine("");
 
                     CloudCoin detectedCC = this.raida.detectCoin(newCC);
@@ -76,17 +85,11 @@ namespace Foundation
                             alreadyExists = this.fileUtils.writeTo(this.fileUtils.counterfeitFolder, detectedCC);
                             break;  
                         case "suspect":
-                            coinSupect = true;//Coin will remail in suspect folder
+                            coinSupect = true;//Coin will remain in suspect folder
                             break;
                     }
 
-                    if ( alreadyExists ) {//Coin has already been imported. Delete it from import folder move to trash.
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Out.WriteLine("You tried to import a coin that has already been imported.");
-                        Console.Out.WriteLine("Please remove it from you import folder.");
-                        Console.ForegroundColor = ConsoleColor.White;
-
-                    }
+ 
 
                     // end switch on the place the coin will go 
                     if (!coinSupect)//Leave coin in the suspect folder if RAIDA is down
@@ -110,8 +113,10 @@ namespace Foundation
                 {
                     Console.Out.WriteLine(ioex);
                 }// end try catch
-            }// end for each coin to import
-            results[0] = totalValueToBank;
+            }//end if the file already exists i bank
+
+        }// end for each coin to import
+        results[0] = totalValueToBank;
             results[1] = totalValueToCounterfeit;
             results[2] = totalValueToFractured;
             return results;

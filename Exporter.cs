@@ -287,7 +287,7 @@ namespace Foundation
 
             // end if file exists
             /*Add Saying*/
-            json = json.Replace("[]", @"""We The Cloud People""");
+            //json = json.Replace("[]", @""["We The Cloud People"]"");
             File.WriteAllText(filename, json);
             Console.Out.WriteLine("Writing to " + filename);
             /*DELETE FILES THAT HAVE BEEN EXPORTED*/

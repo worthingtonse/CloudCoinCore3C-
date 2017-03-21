@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -18,8 +19,15 @@ namespace Foundation
         /* PUBLIC METHODS */
         public bool importAll()
         {
-            String[] fnames = new DirectoryInfo(this.fileUtils.importFolder).GetFiles().Select(o => o.Name).ToArray();//Get a list of all in the folder except the directory "imported"
-  
+            var ext = new List<string> { ".jpg", ".stack", ".chest", ".jpeg" };
+            var fnamesRaw = Directory.GetFiles(this.fileUtils.importFolder, "*.*", SearchOption.TopDirectoryOnly).Where(s => ext.Contains(Path.GetExtension(s)));
+            string[] fnames = new string[fnamesRaw.Count()];
+            for (int i = 0; i < fnamesRaw.Count(); i++){
+                fnames[i] = Path.GetFileName( fnamesRaw.ElementAt(i) );
+            };
+
+            //String[] fnames = new DirectoryInfo(this.fileUtils.importFolder).GetFiles().Select(o => o.Name).ToArray();//Get a list of all in the folder except the directory "imported"
+
             if (fnames.Length == 0)//   Console.Out.WriteLine("There were no CloudCoins to import. Please place our CloudCoin .jpg and .stack files in your imports" + " folder at " + this.fileUtils.importFolder );
             {
                 return false;

@@ -25,7 +25,7 @@ namespace Foundation
             String newFileName = "";
             for(int i= 0; i < bankFileNames.Length; i++) {
                 newFileName = bankFileNames[i];
-                int randInt = random.Next(100000, 10000000);
+                int randInt = random.Next(100000, 10000000);   
                 string randomIntString = "." + randInt.ToString() + ".";
                 newFileName = newFileName.Replace("..", randomIntString);
 

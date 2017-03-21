@@ -237,7 +237,7 @@ namespace Foundation
          */
         private String getHtml(String urlAddress)
         {
-            Console.Out.Write(".");
+           // Console.Out.Write(".");
             string data = "";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
             request.ContinueTimeout = readTimeout;

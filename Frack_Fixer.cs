@@ -44,9 +44,9 @@ namespace Foundation
                 {
                     frackedCC = fileUtils.loadOneCloudCoinFromJsonFile( this.fileUtils.frackedFolder + frackedFileNames[i] );
                  //   Console.WriteLine( "UnFracking SN " + frackedCC.sn + ", Denomination: " + frackedCC.getDenomination() );
-
+                
                   String value = frackedCC.aoid["fracked"];
-                  Console.WriteLine("Fracked Coin: ");
+                //  Console.WriteLine("Fracked Coin: ");
                     frackedCC.consoleReport();
                     //  Console.WriteLine("pastestatus for [0] " + frackedCC.pastStatus[0]);
                     ///   Console.WriteLine("pastestatus for [1] " + frackedCC.pastStatus[1]);
@@ -61,16 +61,19 @@ namespace Foundation
                             this.totalValueToBank++;
                             this.fileUtils.overWrite(this.fileUtils.bankFolder, fixedCC);
                             this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[i]);
+                            Console.WriteLine("CloudCoin was moved to Bank.");
                             break;
                         case "counterfeit":
                             this.totalValueToCounterfeit++;
                             this.fileUtils.overWrite(this.fileUtils.counterfeitFolder, fixedCC);
                             this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[i]);
+                            Console.WriteLine("CloudCoin was moved to Trash.");
                             break;
                         default://Move back to fracked folder
                             this.totalValueToFractured++;
                             this.deleteCoin(this.fileUtils.frackedFolder + frackedFileNames[i]);
                             this.fileUtils.overWrite(this.fileUtils.frackedFolder, fixedCC);
+                            Console.WriteLine("CloudCoin was moved back to Fraked folder.");
                             break;
                     }
                     // end switch on the place the coin will go 
@@ -85,7 +88,7 @@ namespace Foundation
                 catch (IOException ioex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(ioex);
+                   Console.WriteLine(ioex);
                     Console.ForegroundColor = ConsoleColor.White;
                 } // end try catch
             }// end for each file name that is fracked

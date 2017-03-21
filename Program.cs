@@ -22,7 +22,7 @@ namespace Foundation
         public static String directoryFolder = rootFolder + "Directory" + Path.DirectorySeparatorChar;
         public static String exportFolder = rootFolder + "Export" + Path.DirectorySeparatorChar;
         public static String prompt = "Start Mode> ";
-        public static String[] commandsAvailable = new String[] { "show coins", "import", "export", "fix fracked", "show folders", "dump", "quit" };
+        public static String[] commandsAvailable = new String[] { "echo raida", "show coins", "import", "export", "fix fracked", "show folders", "dump", "quit" };
         //public static String[] commandsAvailable = new String[] { "import", "show coins", "export", "fix fracked", "quit", "show folders", "test echo", "test detect", "test get_ticket", "test hints", "test fix", };
         public static int timeout = 10000; // Milliseconds to wait until the request is ended. 
         public static FileUtils fileUtils = new FileUtils(rootFolder, importFolder, importedFolder, trashFolder, suspectFolder, frackedFolder, bankFolder, templateFolder, counterfeitFolder, directoryFolder, exportFolder);
@@ -60,6 +60,9 @@ namespace Foundation
                 String commandRecieved = reader.readString(commandsAvailable);
                 switch (commandRecieved.ToLower())
                 {
+                    case "echo raida":
+                        echoRaida();
+                        break;
                     case "show coins":
                         showCoins();
                         break;
@@ -97,7 +100,7 @@ namespace Foundation
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Out.WriteLine("╔══════════════════════════════════════════════════════════════════╗");
-            Console.Out.WriteLine("║                   CloudCoin Foundation v.3.13.17                 ║");
+            Console.Out.WriteLine("║                   CloudCoin Foundation v.3.17.17                 ║");
             Console.Out.WriteLine("║          Used to Authenticate, Store and Payout CloudCoins       ║");
             Console.Out.WriteLine("║      This Software is provided as is with all faults, defects    ║");
             Console.Out.WriteLine("║          and errors, and without warranty of any kind.           ║");
@@ -106,6 +109,12 @@ namespace Foundation
             Console.ForegroundColor = ConsoleColor.White;
         } // End print welcome
 
+
+        public static void echoRaida() {
+
+
+        
+}
 
         public static void showCoins()
         {
@@ -150,6 +159,18 @@ namespace Foundation
 
         public static void import()
         {
+            //CHECK TO SEE IF THERE ARE UN DETECTED COINS IN THE SUSPECT FOLDER
+            String[] suspectFileNames = new DirectoryInfo(suspectFolder).GetFiles().Select(o => o.Name).ToArray();//Get all files in suspect folder
+            if (suspectFileNames.Length > 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Out.WriteLine("Finishing importing coins from last time...");
+                Console.ForegroundColor = ConsoleColor.White;
+                detect();
+                Console.Out.WriteLine("Now looking in import folder for new coins...");
+            } //end if there are files in the suspect folder that need to be imported
+
+         
             Console.Out.WriteLine("");
             Console.ForegroundColor = ConsoleColor.Green; 
             Console.Out.WriteLine("Loading all CloudCoins in your import folder: " + importFolder);
@@ -160,15 +181,6 @@ namespace Foundation
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Out.WriteLine("No coins in import folder.");
                 Console.ForegroundColor = ConsoleColor.White;
-                //CHECK TO SEE IF THERE ARE UN DETECTED COINS IN THE SUSPECT FOLDER
-                String[] suspectFileNames = new DirectoryInfo(suspectFolder).GetFiles().Select(o => o.Name).ToArray();//Get all files in suspect folder
-                if (suspectFileNames.Length > 0)
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Out.WriteLine("Finishing importing coins from last time...");
-                    Console.ForegroundColor = ConsoleColor.White;
-                    detect();
-                } //end if there are files in the suspect folder that need to be imported
             }
             else
             {
@@ -320,11 +332,13 @@ namespace Foundation
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             Console.Out.WriteLine("");
-            Console.Out.WriteLine("Attempting attempt to fix all fracked coins.");
+            Console.Out.WriteLine("Attempting to fix all fracked coins.");
+            Console.Out.WriteLine("");
             Frack_Fixer fixer = new Frack_Fixer(fileUtils, timeout);
             fixer.fixAll();
             stopwatch.Stop();
             Console.Out.WriteLine("Fix Time: " + stopwatch.Elapsed + " ms");
+            showCoins();
         }//end fix
 
 
