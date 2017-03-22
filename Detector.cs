@@ -44,82 +44,80 @@ namespace Foundation
                     {//Coin has already been imported. Delete it from import folder move to trash.
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Out.WriteLine("You tried to import a coin that has already been imported.");
-                        File.Delete(this.fileUtils.bankFolder + suspectFileNames[j] );
+                        File.Delete(this.fileUtils.bankFolder + suspectFileNames[j]);
                         Console.Out.WriteLine("Suspect CloudCoin was deleted.");
                         Console.ForegroundColor = ConsoleColor.White;
-                    }else
+                    }
+                    else
                     {
+                        newCC = this.fileUtils.loadOneCloudCoinFromJsonFile(this.fileUtils.suspectFolder + suspectFileNames[j]);
+                        Console.Out.WriteLine("Now scanning coin " + (j + 1) + " of " + suspectFileNames.Length + " for counterfeit. SN " + string.Format("{0:n0}", newCC.sn) + ", Denomination: " + newCC.getDenomination());
+                        Console.Out.WriteLine("");
 
-                    newCC = this.fileUtils.loadOneCloudCoinFromJsonFile(this.fileUtils.suspectFolder + suspectFileNames[j]);
-                    Console.Out.WriteLine("Now scanning coin " + (j+1) + " of " + suspectFileNames.Length + " for counterfeit. SN " + string.Format("{0:n0}", newCC.sn) + ", Denomination: " + newCC.getDenomination());
-                    Console.Out.WriteLine("");
+                        CloudCoin detectedCC = this.raida.detectCoin(newCC);
+                        detectedCC.calcExpirationDate();
 
-                    CloudCoin detectedCC = this.raida.detectCoin(newCC);
-                    detectedCC.calcExpirationDate();
-              
-                    if(j==0)//If we are detecting the first coin, note if the RAIDA are working
-                    { 
-                        for (int i=0;i<25;i++)// Checks any servers are down so we don't try to check them again. 
+                        if (j == 0)//If we are detecting the first coin, note if the RAIDA are working
                         {
-                            if ( detectedCC.pastStatus[i] != "pass" && detectedCC.pastStatus[i] != "fail") {
-                                raida.raidaIsDetecting[i] = false;//Server is not working correctly, don't try it agian
+                            for (int i = 0; i < 25; i++)// Checks any servers are down so we don't try to check them again. 
+                            {
+                                if (detectedCC.pastStatus[i] != "pass" && detectedCC.pastStatus[i] != "fail")
+                                {
+                                    raida.raidaIsDetecting[i] = false;//Server is not working correctly, don't try it agian
+                                }
                             }
+                        }//end if it is the first coin we are detecting
+
+                        detectedCC.consoleReport();
+
+                        bool alreadyExists = false;//Does the file already been imported?
+                        switch (detectedCC.extension)
+                        {
+                            case "bank":
+                                totalValueToBank++;
+                                alreadyExists = this.fileUtils.writeTo(this.fileUtils.bankFolder, detectedCC);
+                                break;
+                            case "fracked":
+                                totalValueToFractured++;
+                                alreadyExists = this.fileUtils.writeTo(this.fileUtils.frackedFolder, detectedCC);
+                                break;
+                            case "counterfeit":
+                                totalValueToCounterfeit++;
+                                alreadyExists = this.fileUtils.writeTo(this.fileUtils.counterfeitFolder, detectedCC);
+                                break;
+                            case "suspect":
+                                coinSupect = true;//Coin will remain in suspect folder
+                                break;
+                        }//end switch
+
+
+
+                        // end switch on the place the coin will go 
+                        if (!coinSupect)//Leave coin in the suspect folder if RAIDA is down
+                        {
+                            File.Delete(this.fileUtils.suspectFolder + suspectFileNames[j]);//Take the coin out of the suspect folder
                         }
-                    }//end if it is the first coin we are detecting
+                        else
+                        {
+                            this.fileUtils.writeTo(this.fileUtils.suspectFolder, detectedCC);
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Out.WriteLine("Not enough RAIDA were contacted to determine if the coin is authentic.");
+                            Console.Out.WriteLine("Try again later.");
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }//end if else
 
-                    detectedCC.consoleReport();
-
-                    bool alreadyExists = false;//Does the file already been imported?
-                    switch (detectedCC.extension)
-                    {
-                        case "bank":
-                            totalValueToBank++;
-                            alreadyExists = this.fileUtils.writeTo(this.fileUtils.bankFolder, detectedCC);
-                            break;
-                        case "fracked":
-                            totalValueToFractured++;
-                            alreadyExists = this.fileUtils.writeTo(this.fileUtils.frackedFolder, detectedCC);
-                            break;
-                        case "counterfeit":
-                            totalValueToCounterfeit++;
-                            alreadyExists = this.fileUtils.writeTo(this.fileUtils.counterfeitFolder, detectedCC);
-                            break;  
-                        case "suspect":
-                            coinSupect = true;//Coin will remain in suspect folder
-                            break;
-                    }
-
- 
-
-                    // end switch on the place the coin will go 
-                    if (!coinSupect)//Leave coin in the suspect folder if RAIDA is down
-                    {
-                        File.Delete(this.fileUtils.suspectFolder + suspectFileNames[j]);//Take the coin out of the suspect folder
-                    }
-                    else {
-                        this.fileUtils.writeTo(this.fileUtils.suspectFolder, detectedCC);
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Out.WriteLine("Not enough RAIDA were contacted to determine if the coin is authentic.");
-                        Console.Out.WriteLine("Try again later.");
-                        Console.ForegroundColor = ConsoleColor.White;
-                    }
-                    
-                }
-                catch (FileNotFoundException ex)
-                {
+                    }//end if file exists
+                }catch (FileNotFoundException ex){
                     Console.Out.WriteLine(ex);
-                }
-                catch (IOException ioex)
-                {
+                }catch (IOException ioex){
                     Console.Out.WriteLine(ioex);
                 }// end try catch
-            }//end if the file already exists i bank
-
-        }// end for each coin to import
-        results[0] = totalValueToBank;
+         }// end for each coin to import
+            results[0] = totalValueToBank;
             results[1] = totalValueToCounterfeit;
             results[2] = totalValueToFractured;
             return results;
         }//Detect All
+
     }
 }

@@ -139,7 +139,6 @@ namespace Foundation
             }
         }//end detect
 
-
         public String get_ticket(int nn, int sn, String an, int d)
         { //Will only use ans to fix
             this.lastRequest = fullUrl + "get_ticket?nn=" + nn + "&sn=" + sn + "&an=" + an + "&pan=" + an + "&denomination=" + d;
@@ -181,8 +180,6 @@ namespace Foundation
                 return "Get_ticket failed on this RAIDA so hints could not be checked.";
             }//end if ticket was got
         }//End test hints
-
-
 
         /**
          * Method fix
@@ -228,7 +225,6 @@ namespace Foundation
             return "error";
         }//end fixit
 
-
         /**
          * Method getHtml download a webpage or a web service
          *
@@ -273,8 +269,6 @@ namespace Foundation
 
             return data;
         }//end get HTML
-
-
 
         /**
          * Method ordinalIndexOf used to parse cloudcoins. Finds the nth number of a character within a string

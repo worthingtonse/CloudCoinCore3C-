@@ -24,9 +24,15 @@ namespace Foundation
         private String ticket2 = "";
         private String ticket3 = "";
 
+        private int working_nn;
+        private int working_sn;
+        private String[] working_ans;
+        private int working_getDenomination;
+
         private int[] working_triad = { 0, 1, 2 };//place holder
         public bool[] raidaIsDetecting = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
         public string[] lastDetectStatus = { "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected", "notdetected" };
+        public string[] echoStatus = { "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply", "noreply" };
         /* CONSTRUCTOR */
         public RAIDA(int milliSecondsToTimeOut)
         { //  initialise instance variables
@@ -38,30 +44,65 @@ namespace Foundation
             } // end for each Raida
         }//End Constructor
 
-       
-                public string[] echo()
-                {
+
+        public void echoOne( int raida_id )
+        {
+            DetectionAgent da = new DetectionAgent(raida_id, 2000);
+            da.echo(raida_id);
+            if (da.lastResponse.Contains("ready"))//echo was good
+            {
+                echoStatus[raida_id] = "ready";
+            }
+            else //echo was bad
+            {
+                echoStatus[raida_id] = "notready";
+            }//end if pass
+        }//end echo 
+
+        public string[] echoAll(  )
+           {
                     Stopwatch sw = new Stopwatch();
                     string[] results = new string[25];
-                    int i = 0;
-                    sw.Start();
-                    for(int raidaID = 0; raidaID < 25; raidaID++)
-                    {
-                        DetectionAgent da = new DetectionAgent(raidaID, 2000);
-                        da.echo(raidaID);
-                        if (da.lastResponse.Contains("ready"))//echo was good
-                         {
-                                 results[raidaID] = "ready";
-                          }
-                         else //echo was bad
-                          {
-                               results[raidaID] = "notready";
-                          }//end if pass
 
-                  }
-            return results;
-                }//end echo
 
+            var t00 = Task.Factory.StartNew(() => echoOne(00));
+            var t01 = Task.Factory.StartNew(() => echoOne(01));
+            var t02 = Task.Factory.StartNew(() => echoOne(02));
+            var t03 = Task.Factory.StartNew(() => echoOne(03));
+            var t04 = Task.Factory.StartNew(() => echoOne(04));
+            var t05 = Task.Factory.StartNew(() => echoOne(05));
+            var t06 = Task.Factory.StartNew(() => echoOne(06));
+            var t07 = Task.Factory.StartNew(() => echoOne(07));
+            var t08 = Task.Factory.StartNew(() => echoOne(08));
+            var t09 = Task.Factory.StartNew(() => echoOne(09));
+            var t10 = Task.Factory.StartNew(() => echoOne(10));
+            var t11 = Task.Factory.StartNew(() => echoOne(11));
+            var t12 = Task.Factory.StartNew(() => echoOne(12));
+            var t13 = Task.Factory.StartNew(() => echoOne(13));
+            var t14 = Task.Factory.StartNew(() => echoOne(14));
+            var t15 = Task.Factory.StartNew(() => echoOne(15));
+            var t16 = Task.Factory.StartNew(() => echoOne(16));
+            var t17 = Task.Factory.StartNew(() => echoOne(17));
+            var t18 = Task.Factory.StartNew(() => echoOne(18));
+            var t19 = Task.Factory.StartNew(() => echoOne(19));
+            var t20 = Task.Factory.StartNew(() => echoOne(20));
+            var t21 = Task.Factory.StartNew(() => echoOne(21));
+            var t22 = Task.Factory.StartNew(() => echoOne(22));
+            var t23 = Task.Factory.StartNew(() => echoOne(23));
+            var t24 = Task.Factory.StartNew(() => echoOne(24));
+
+
+            var taskList = new List<Task> { t00, t01, t02, t03, t04, t05, t06, t07, t08, t09, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23, t24 };
+            Task.WaitAll(taskList.ToArray(), milliSecondsToTimeOut);
+            //Get data from the detection agents
+
+            return echoStatus;
+        }//end echo
+
+
+        //end echo
+
+        /*
                 public DetectResponse Detect(CloudCoin coin)
                 {
                     var client = new RestClient();
@@ -180,7 +221,7 @@ namespace Foundation
             }
             catch (Exception ex)
             {
-                Console.Out.WriteLine( ex.Message );
+               // Console.Out.WriteLine( ex.Message );
             }
 
 
@@ -489,6 +530,7 @@ namespace Foundation
             Console.Out.WriteLine();
            // Console.ForegroundColor = ConsoleColor.White;
         }
+
         public void fixThread1()
         {
             agent[working_triad[1]].get_ticket(working_nn, working_sn, working_ans[1], working_getDenomination);
@@ -510,6 +552,7 @@ namespace Foundation
             Console.Out.WriteLine();
            // Console.ForegroundColor = ConsoleColor.White;
         }
+
         public void fixThread2()
         {
             agent[working_triad[2]].get_ticket(working_nn, working_sn, working_ans[2], working_getDenomination);

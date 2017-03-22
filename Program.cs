@@ -110,11 +110,66 @@ namespace Foundation
         } // End print welcome
 
 
-        public static void echoRaida() {
+        public static bool echoRaida()
+        {
+            RAIDA raida1 = new RAIDA(2500);
+            string[] echoResults = raida1.echoAll();
+            string[] countries = new string[]{ "Australia", "Macedonia", "Philippines", "Serbia","Bulgaria","Russia","Switzerland","United Kingdom","Punjab","India", "Texas","California","Romania","Taiwan",
+"Moscow", "St.Petersburg", "Columbia", "Singapore", "Germany", "San Francisco", "Venezuela", "Hyperbad", "USA", "Sofia", "Luxenburg" };
+            int totalReady = 0;
+
+            //For every RAIDA check its results
+            int longestCountryName = 15;
+
+            Console.Out.WriteLine();
+            for (int i = 0; i < echoResults.Length; i++)
+            {
+                int padding = longestCountryName - countries[i].Length;
+                string strPad = "";
+                for (int j = 0; j < padding; j++) {
+                    strPad += " ";
+                }//end for padding
+                
 
 
-        
-}
+                if (echoResults[i] == "ready")
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Out.Write( countries[i] + strPad );
+                    totalReady++;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Out.Write( countries[i] + strPad );
+                }
+                if ( i == 4 || i==9 || i==14||i==19) { Console.WriteLine(); }
+            }//end for
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Out.WriteLine("");
+            Console.Out.WriteLine("");
+            Console.Out.WriteLine("RAIDA Health: " + totalReady + " out of 25");
+            Console.Out.WriteLine();
+            //Check if enough are good 
+            if (totalReady < 16)//
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Out.Write("");
+                Console.Out.Write("Not enough RAIDA servers can be contacted to import new coins.");
+                Console.Out.Write("Is your device connected to the Internet?");
+                Console.Out.Write("Is a router blocking your connection?");
+                Console.ForegroundColor = ConsoleColor.White;
+                return false;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Out.Write("");
+                Console.Out.Write("The RAIDA is ready for counterfeit detection.");
+                Console.ForegroundColor = ConsoleColor.White;
+                return true;
+            }//end if enough RAIDA
+        }//End echo
 
         public static void showCoins()
         {
@@ -329,6 +384,9 @@ namespace Foundation
 
 
         public static void fix() {
+
+            Console.Out.WriteLine("Fixing fracked coins can take many minutes.");
+            Console.Out.WriteLine("If your coins are not completely fixed, fix fracked again.");
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             Console.Out.WriteLine("");
@@ -337,6 +395,7 @@ namespace Foundation
             Frack_Fixer fixer = new Frack_Fixer(fileUtils, timeout);
             fixer.fixAll();
             stopwatch.Stop();
+            Console.Out.WriteLine(" ms");
             Console.Out.WriteLine("Fix Time: " + stopwatch.Elapsed + " ms");
             showCoins();
         }//end fix
