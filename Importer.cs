@@ -19,7 +19,7 @@ namespace Foundation
         /* PUBLIC METHODS */
         public bool importAll()
         {
-            var ext = new List<string> { ".jpg", ".stack", ".chest", ".jpeg" };
+            var ext = new List<string> { ".jpg", ".stack", ".jpeg" };
             var fnamesRaw = Directory.GetFiles(this.fileUtils.importFolder, "*.*", SearchOption.TopDirectoryOnly).Where(s => ext.Contains(Path.GetExtension(s)));
             string[] fnames = new string[fnamesRaw.Count()];
             for (int i = 0; i < fnamesRaw.Count(); i++){

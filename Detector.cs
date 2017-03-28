@@ -44,8 +44,8 @@ namespace Foundation
                     {//Coin has already been imported. Delete it from import folder move to trash.
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Out.WriteLine("You tried to import a coin that has already been imported.");
-                        File.Delete(this.fileUtils.bankFolder + suspectFileNames[j]);
-                        Console.Out.WriteLine("Suspect CloudCoin was deleted.");
+                        File.Move(this.fileUtils.suspectFolder + suspectFileNames[j], this.fileUtils.trashFolder + suspectFileNames[j]);
+                        Console.Out.WriteLine("Suspect CloudCoin was moved to Trash folder.");
                         Console.ForegroundColor = ConsoleColor.White;
                     }
                     else

@@ -100,7 +100,7 @@ namespace Foundation
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Out.WriteLine("╔══════════════════════════════════════════════════════════════════╗");
-            Console.Out.WriteLine("║                   CloudCoin Foundation v.3.17.17                 ║");
+            Console.Out.WriteLine("║                   CloudCoin Foundation v.3.24.17                 ║");
             Console.Out.WriteLine("║          Used to Authenticate, Store and Payout CloudCoins       ║");
             Console.Out.WriteLine("║      This Software is provided as is with all faults, defects    ║");
             Console.Out.WriteLine("║          and errors, and without warranty of any kind.           ║");
@@ -112,7 +112,7 @@ namespace Foundation
 
         public static bool echoRaida()
         {
-            RAIDA raida1 = new RAIDA(2500);
+            RAIDA raida1 = new RAIDA(5000);
             string[] echoResults = raida1.echoAll();
             string[] countries = new string[]{ "Australia", "Macedonia", "Philippines", "Serbia","Bulgaria","Russia","Switzerland","United Kingdom","Punjab","India", "Texas","California","Romania","Taiwan",
 "Moscow", "St.Petersburg", "Columbia", "Singapore", "Germany", "San Francisco", "Venezuela", "Hyperbad", "USA", "Sofia", "Luxenburg" };
