@@ -73,11 +73,16 @@ namespace Foundation
             // Console.Out.WriteLine(jsonArray.Length);
             if (incomeJson.Contains("fracked"))//If there is an fracked note that explains the status "fracked=ppppppppfppppppppppppppp"
             {
-                frackedCodes = incomeJson.Substring(incomeJson.IndexOf("fracked") + 10, 25);
+                if (incomeJson.Contains("fracked\""))
+                {
+                    frackedCodes = incomeJson.Substring(incomeJson.IndexOf("fracked") + 10, 25);//fixes bug where we used impropver json, can be deleted later
+                }
+                else {
+                    frackedCodes = incomeJson.Substring(incomeJson.IndexOf("fracked") + 8, 25);
+                }
+
                // Console.WriteLine(frackedCodes);
                 aoid_dictionary.Add("fracked", frackedCodes);
-
-
             }
 
             CloudCoin returnCC = new CloudCoin(nn, sn, ans, ed, aoid_dictionary, "suspect");
@@ -124,6 +129,8 @@ namespace Foundation
                 String ed = jsonArray[63];
                 String aoid = "";
                 // Console.Out.WriteLine(jsonArray.Length);
+
+
                 if (jsonArray.Length > 67)
                 {//If there is an aoid
                     aoid = jsonArray[67];
@@ -264,7 +271,7 @@ namespace Foundation
                         json += ",";
                     }
 
-                    json += quote + entry.Key + quote + "=" + quote + entry.Value + quote;
+                    json += quote + entry.Key + "=" + entry.Value + quote;
                     count++;
                 }//end for each
             }//end if null
@@ -380,7 +387,7 @@ namespace Foundation
             {
                 wholeJson += tab + quote + "cloudcoin" + quote + ": [" + Environment.NewLine; // "cloudcoin" : [
                 wholeJson += json;
-                wholeJson += "}";
+                wholeJson += "]}";
                 File.WriteAllText(folder + cc.fileName + ".stack", wholeJson);
             }
             else

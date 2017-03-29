@@ -281,7 +281,8 @@ namespace Foundation
             Console.Out.WriteLine("Detecting Authentication of Suspect Coins");
             Detector detector = new Detector(fileUtils, timeout);
             int[] detectionResults = detector.detectAll();
-            Console.Out.WriteLine(("Total imported to bank: " + (detectionResults[0] + detectionResults[2])));
+            Console.Out.WriteLine("Total imported to bank: " + detectionResults[0] );
+            Console.Out.WriteLine("Total imported to fracked: " + detectionResults[2] );
             // And the bank and the fractured for total
             Console.Out.WriteLine(("Total Counterfeit: " + detectionResults[1]));
             showCoins();
