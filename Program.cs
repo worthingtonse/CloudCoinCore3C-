@@ -100,7 +100,7 @@ namespace Foundation
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Out.WriteLine("╔══════════════════════════════════════════════════════════════════╗");
-            Console.Out.WriteLine("║                   CloudCoin Foundation v.3.24.17                 ║");
+            Console.Out.WriteLine("║                   CloudCoin Foundation v.3.29.17                 ║");
             Console.Out.WriteLine("║          Used to Authenticate, Store and Payout CloudCoins       ║");
             Console.Out.WriteLine("║      This Software is provided as is with all faults, defects    ║");
             Console.Out.WriteLine("║          and errors, and without warranty of any kind.           ║");
@@ -293,15 +293,68 @@ namespace Foundation
         public static void dump()
         {
             Console.Out.WriteLine("");
-            Console.Out.WriteLine("Dumping will export your entire bank into your export folder in the form of stack files.");
-            Console.Out.WriteLine("Each file will recieve a random tag. This function is to help you sell CloudCoins on automated sales points.");
+            Console.Out.WriteLine("Dumping will export stack files with only one note in them.");
+            Console.Out.WriteLine("Each file will recieve a random tag.");
+            Console.Out.WriteLine("This function helps you make CloudCoins for automated sales points.");
             Console.Out.WriteLine("Continue to dump? Yes or No?");
             string[] answers = new string[2] { "yes", "no" };
             string okToDump = reader.readString(answers);
             if ( okToDump.ToLower() == "yes")
             {
                 Dumper dumper = new Dumper(fileUtils);
-                dumper.dumpAll();
+                Console.Out.WriteLine("");
+                Banker bank = new Banker(fileUtils);
+                int[] bankTotals = bank.countCoins(bankFolder);
+                int[] frackedTotals = bank.countCoins(frackedFolder);
+                Console.Out.WriteLine("Your Bank Inventory:");
+                int grandTotal = (bankTotals[0] + frackedTotals[0]);
+                showCoins();
+                // state how many 1, 5, 25, 100 and 250
+                int exp_1 = 0;
+                int exp_5 = 0;
+                int exp_25 = 0;
+                int exp_100 = 0;
+                int exp_250 = 0;
+
+                // 1 jpg 2 stack
+                if ((bankTotals[1] + frackedTotals[1]) > 0)
+                {
+                    Console.Out.WriteLine("How many 1s do you want to dump?");
+                    exp_1 = reader.readInt(0, (bankTotals[1] + frackedTotals[1]));
+                }
+
+                // if 1s not zero 
+                if ((bankTotals[2] + frackedTotals[2]) > 0)
+                {
+                    Console.Out.WriteLine("How many 5s do you want to dump?");
+                    exp_5 = reader.readInt(0, (bankTotals[2] + frackedTotals[2]));
+                }
+
+                // if 1s not zero 
+                if ((bankTotals[3] + frackedTotals[3] > 0))
+                {
+                    Console.Out.WriteLine("How many 25s do you want to dump?");
+                    exp_25 = reader.readInt(0, (bankTotals[3] + frackedTotals[3]));
+                }
+
+                // if 1s not zero 
+                if ((bankTotals[4] + frackedTotals[4]) > 0)
+                {
+                    Console.Out.WriteLine("How many 100s do you want to dump?");
+                    exp_100 = reader.readInt(0, (bankTotals[4] + frackedTotals[4]));
+                }
+
+                // if 1s not zero 
+                if ((bankTotals[5] + frackedTotals[5]) > 0)
+                {
+                    Console.Out.WriteLine("How many 250s do you want to dump?");
+                    exp_250 = reader.readInt(0, (bankTotals[5] + frackedTotals[5]));
+                }
+
+                dumper.dumpSome(exp_1, exp_5, exp_25, exp_100, exp_250);
+
+
+
                 Console.Out.WriteLine("Dump complete. Check your export folder");
                 // And the bank and the fractured for total
                 showCoins();
